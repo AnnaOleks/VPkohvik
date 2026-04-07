@@ -1,0 +1,183 @@
+/* Подключение шрифтов */
+@font-face {
+    font-family: 'Playfair Display'; /* Имя, которое ты будешь использовать */
+    src: url('../fonts/Playfair Display/PlayfairDisplay.ttf') format('truetype');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Noto Serif'; /* Имя, которое ты будешь использовать */
+    src: url('../fonts/Noto Serif/NotoSerif-Regular.ttf') format('truetype');
+    font-weight: 400;
+}
+
+:root { /* Глобальные переменные (доступны во всём CSS) */
+    /* Цвета */
+    --bg: #0b0b0c; /* Фон сайта */
+    --text: #f3f3f3; /* Основной цвет текста */
+    --text-secondary: rgba(255,255,255,.7); /* Вторичный цвет текста */
+    --gold-1: #c9a24d; /* Основной золотой */
+    --gold-2: #e5c76b; /* Светлый оттенок */
+    --gold-3: #8a6a2f; /* Тёмный оттенок */
+
+    /* Шрифты */
+    --font-text: 'Noto Serif', sans-serif; /* Основной текст */
+    --font-title: 'Playfair Display', serif; /* Заголовки */
+    --font-logo: 'Great Vibes', cursive; /* Логотип / декоративный текст */
+
+    /* Анимации */
+    --t: 220ms ease; /* Стандартная длительность анимаций */
+}
+
+/* Сброс стандартных отступов браузера */
+* {
+    margin: 0; /* Убираем внешние отступы */
+    padding: 0; /* Убираем внутренние отступы */
+}
+
+/* Растягиваем страницу на всю высоту */
+html, body {
+    height: 100%;
+}
+
+body {
+    background: var(--bg); /* Цвет фона */
+    color: var(--text); /* Цвет текста */
+    line-height: 1.6; /* Межстрочный интервал */
+    text-align: center; /* Выравнивание текста по центру */
+    font-family: var(--font-text), sans-serif; /* Применяем основной шрифт */
+}
+
+/* Ссылки */
+a {
+    color: inherit; /* Наследует цвет родителя (чтобы не были синими по умолчанию) */
+    text-decoration: none; /* Убирает подчёркивание */
+}
+
+/* Все заголовки */
+h1, h2, h3, h4, h5 {
+    font-family: var(--font-text), sans-serif; /* Шрифт заголовков */
+    font-weight: 500; /* Средняя жирность */
+    letter-spacing: 2px; /* Расстояние между буквами */
+    line-height: 1.15; /* Межстрочный интервал */
+}
+
+/* Главный заголовок */
+h1 {
+    font-size: 56px;
+}
+
+/* Заголовки разделов */
+h2 {
+    font-size: 36px;
+}
+
+/* Подзаголовки */
+h3 {
+    font-size: 24px;
+}
+
+/* Обычный текст */
+p {
+    font-size: 16px;
+}
+
+/* Эффект "стекла" */
+.glass {
+    background: rgba(255,255,255,.04); /* Полупрозрачный фон */
+    backdrop-filter: blur(10px); /* Размытие фона позади */
+    border: 1px solid rgba(255,255,255,.1); /* Лёгкая рамка */
+}
+
+/* Основная кнопка */
+.btn {
+    display: inline-flex; /* Flex для выравнивания содержимого */
+    align-items: center; /* Вертикальное выравнивание */
+    justify-content: center; /* Горизонтальное выравнивание */
+    height: 44px; /* Фиксированная высота */
+    padding: 0 22px; /* Внутренние отступы */
+    border-radius: 12px; /* Скругление углов */
+    border: 1px solid rgba(255,255,255,.15); /* Рамка */
+    background: linear-gradient( /* Фон кнопки: Градиент "золота" */
+            135deg, /* Направление с верхнего левого угла и плавно в нижний правый*/
+            var(--gold-2) 0%, /* Свет */
+            var(--gold-1) 40%, /* Основа */
+            var(--gold-3) 100% /* Тень */
+    );
+    color: black; /* Цвет текста */
+    font-weight: 500; /* Средняя жирность */
+    letter-spacing: 4px; /* Разрядка текста */
+    text-transform: uppercase; /* Верхний регистр */
+    font-family: var(--font-text), sans-serif;
+    font-size: 13px; /* Размер текста */
+    cursor: pointer; /* Курсор "рука" */
+    transition: var(--t); /* Плавные анимации */
+    box-shadow:
+            0 4px 20px rgba(201,162,77,.25), /* Внешняя тень [смещение X] [смещение Y] [размытие] [цвет]*/
+            inset 0 1px 0 rgba(255,255,255,.2); /* Внутренний свет */
+    backdrop-filter: blur(6px); /* Лёгкий blur (стеклянный эффект) */
+}
+
+/* Hover-эффект кнопки */
+.btn:hover {
+    background: linear-gradient( /* Более яркий градиент */
+            135deg,
+            #f5d97a 0%, /* Ещё светлее */
+            var(--gold-2) 40%,
+            var(--gold-1) 100%
+    );
+
+    box-shadow:
+            0 8px 30px rgba(201,162,77,.35), /* Тень усиливается */
+            inset 0 1px 0 rgba(255,255,255,.3); /* Внутренний свет сильнее */
+}
+
+/* Кнопка-ссылка (тонкий стиль) */
+.btn-link {
+    display: inline-flex; /* Flex */
+    align-items: center; /* Центр */
+    gap: 10px; /* Расстояние между элементами */
+    background: transparent; /* Без фона */
+    color: var(--text); /* Цвет текста */
+    position: relative; /* Нужно для псевдоэлемента */
+    font-weight: 500;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    font-family: var(--font-text), sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: var(--t);
+    padding-bottom: 8px; /* Место под линию */
+    line-height: 1;
+}
+
+/* Линия под кнопкой */
+.btn-link::after {
+    content: ""; /* Обязательное свойство */
+    position: absolute; /* Абсолютное позиционирование */
+    left: 0; /* Слева */
+    bottom: -6px; /* Чуть ниже текста */
+    width: 100%; /* Во всю ширину */
+    height: 1px; /* Тонкая линия */
+    background: var(--gold-1); /* Золотой цвет */
+    transform: scaleX(0); /* Скрыта (сжата) */
+    transform-origin: left; /* Начинается слева */
+    transition: var(--t); /* Плавность */
+}
+
+/* Hover текста */
+.btn-link:hover {
+    color: var(--gold-2); /* Текст становится золотым */
+}
+
+/* Анимация линии */
+.btn-link:hover::after {
+    background: var(--gold-2); /* Цвет меняется */
+    transform: scaleX(1); /* плавно растягивается */
+}
+
+/* Фокус (для доступности) */
+.btn:focus {
+    box-shadow: 0 0 0 3px rgba(201,162,77,.18); /* Обводка при фокусе */
+}
+

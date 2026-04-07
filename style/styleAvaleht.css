@@ -1,0 +1,97 @@
+.avaleht {
+    background-color: var(--bg); /* Цвет фона под всеми слоями */
+    background-image:
+            linear-gradient(
+                    90deg, /* Направление градиента (слева направо) */
+                    rgba(0,0,0,.55) 0%, /* Левый край — тёмный */
+                    rgba(0,0,0,.42) 55%, /* Центр — менее тёмный */
+                    rgba(0,0,0,.55) 100% /* Правый край — тёмный */
+            ),
+            url("../img/avalehtTaust3.png"); /* Фоновое изображение */
+    background-attachment: fixed; /* Фон не прокручивается вместе со страницей */
+    background-repeat: no-repeat; /* Изображение не повторяется */
+    background-position: right; /* Выравнивание фона по правому краю */
+    position: relative; /* Позволяет позиционировать вложенные элементы относительно body */
+    overflow: hidden;
+}
+
+.avaleht1Ekraan {
+    position: relative;
+    z-index: 4;
+    margin: 0 auto;
+    padding: 20px 20px 20px 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 40px;
+    text-align: left;
+    max-width: 1200px;
+    width: 100%;
+    min-height: 450px;
+}
+
+.vasakBlock {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.avalehtBrand {
+    display: inline-block;
+}
+
+.avalehtVP {
+    margin: 0;
+    font-size: 140px;
+    line-height: 0.9;
+    letter-spacing: 2px;
+    color: var(--text);
+}
+
+.avalehtKohvik {
+    margin-top: 12px;
+    font-size: 20px;
+    letter-spacing: 20px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.avalehtSlogan {
+    margin-top: 60px;
+    margin-bottom: 60px;
+    font-size: 21px;
+    color: var(--text-secondary);
+    letter-spacing: 1px;
+    max-width: 380px; /* чтобы не растягивался */
+}
+
+.avalehtActions {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.avaleht2Ekraan {
+    position: relative;
+    z-index: 5;
+    margin-top: 54px;
+    padding: 0 0 54px 0;
+}
+
+.bronBlock {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.avalehtBronForm {
+
+}
+
+.piibudBlock {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+}
