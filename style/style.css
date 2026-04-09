@@ -1,14 +1,14 @@
 /* Подключение шрифтов */
-@font-face {
-    font-family: 'Playfair Display'; /* Имя, которое ты будешь использовать */
-    src: url('../fonts/Playfair Display/PlayfairDisplay.ttf') format('truetype');
-    font-weight: 400;
+@font-face { /* Объявление пользовательского шрифта */
+    font-family: 'Playfair Display'; /* Имя шрифта, которое будет использоваться в CSS */
+    src: url('../fonts/Playfair Display/PlayfairDisplay.ttf') format('truetype'); /* Путь к файлу шрифта и его формат */
+    font-weight: 400; /* Нормальная (обычная) толщина шрифта */
 }
 
-@font-face {
-    font-family: 'Noto Serif'; /* Имя, которое ты будешь использовать */
-    src: url('../fonts/Noto Serif/NotoSerif-Regular.ttf') format('truetype');
-    font-weight: 400;
+@font-face { /* Второй подключаемый шрифт */
+    font-family: 'Noto Serif'; /* Имя шрифта */
+    src: url('../fonts/Noto Serif/NotoSerif-Regular.ttf') format('truetype'); /* Путь к файлу */
+    font-weight: 400; /* Обычный вес */
 }
 
 :root { /* Глобальные переменные (доступны во всём CSS) */
@@ -25,6 +25,11 @@
     --font-title: 'Playfair Display', serif; /* Заголовки */
     --font-logo: 'Great Vibes', cursive; /* Логотип / декоративный текст */
 
+    /* Скругления */
+    --r-sm: 8px; /* Маленькое скругление */
+    --r-md: 14px; /* Среднее скругление */
+    --r-lg: 22px; /* Большое скругление */
+
     /* Анимации */
     --t: 220ms ease; /* Стандартная длительность анимаций */
 }
@@ -35,9 +40,16 @@
     padding: 0; /* Убираем внутренние отступы */
 }
 
+*,
+*::before,
+*::after {
+    box-sizing: border-box; /* Учитываем padding и border внутри размеров элемента */
+}
+
 /* Растягиваем страницу на всю высоту */
 html, body {
-    height: 100%;
+    height: 100%; /* Высота равна высоте окна браузера */
+    width: 100%; /* Ширина равна ширине окна */
 }
 
 body {
@@ -56,7 +68,7 @@ a {
 
 /* Все заголовки */
 h1, h2, h3, h4, h5 {
-    font-family: var(--font-text), sans-serif; /* Шрифт заголовков */
+    font-family: var(--font-title), sans-serif; /* Шрифт заголовков */
     font-weight: 500; /* Средняя жирность */
     letter-spacing: 2px; /* Расстояние между буквами */
     line-height: 1.15; /* Межстрочный интервал */
@@ -64,22 +76,24 @@ h1, h2, h3, h4, h5 {
 
 /* Главный заголовок */
 h1 {
-    font-size: 56px;
+    font-size: 56px; /* Крупный размер */
 }
 
 /* Заголовки разделов */
 h2 {
-    font-size: 36px;
+    font-size: 36px; /* Средний размер */
 }
 
 /* Подзаголовки */
 h3 {
-    font-size: 24px;
+    font-size: 24px; /* Меньше */
 }
 
 /* Обычный текст */
 p {
-    font-size: 16px;
+    font-size: 13px;
+    line-height: 1.8;
+    letter-spacing: 0.2px; /* немного воздуха */
 }
 
 /* Эффект "стекла" */
@@ -91,7 +105,7 @@ p {
 
 /* Основная кнопка */
 .btn {
-    display: inline-flex; /* Flex для выравнивания содержимого */
+    display: inline-flex; /* Позволяет выравнивать содержимое */
     align-items: center; /* Вертикальное выравнивание */
     justify-content: center; /* Горизонтальное выравнивание */
     height: 44px; /* Фиксированная высота */
@@ -108,8 +122,9 @@ p {
     font-weight: 500; /* Средняя жирность */
     letter-spacing: 4px; /* Разрядка текста */
     text-transform: uppercase; /* Верхний регистр */
-    font-family: var(--font-text), sans-serif;
-    font-size: 13px; /* Размер текста */
+    font-family: var(--font-text), sans-serif; /* Шрифт */
+    font-size: 13px;
+    line-height: 1.8;
     cursor: pointer; /* Курсор "рука" */
     transition: var(--t); /* Плавные анимации */
     box-shadow:
@@ -135,20 +150,21 @@ p {
 /* Кнопка-ссылка (тонкий стиль) */
 .btn-link {
     display: inline-flex; /* Flex */
+    width: fit-content;
     align-items: center; /* Центр */
     gap: 10px; /* Расстояние между элементами */
     background: transparent; /* Без фона */
     color: var(--text); /* Цвет текста */
     position: relative; /* Нужно для псевдоэлемента */
-    font-weight: 500;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    font-family: var(--font-text), sans-serif;
+    font-weight: 500; /* Жирность */
+    letter-spacing: 4px; /* Разрядка */
+    text-transform: uppercase; /* Верхний регистр */
+    font-family: var(--font-text), sans-serif; /* Шрифт */
     font-size: 13px;
-    cursor: pointer;
-    transition: var(--t);
+    line-height: 1.8;
+    cursor: pointer; /* Курсор */
+    transition: var(--t); /* Плавность */
     padding-bottom: 8px; /* Место под линию */
-    line-height: 1;
 }
 
 /* Линия под кнопкой */
@@ -158,7 +174,7 @@ p {
     left: 0; /* Слева */
     bottom: -6px; /* Чуть ниже текста */
     width: 100%; /* Во всю ширину */
-    height: 1px; /* Тонкая линия */
+    height: 1px; /* Толщина линии */
     background: var(--gold-1); /* Золотой цвет */
     transform: scaleX(0); /* Скрыта (сжата) */
     transform-origin: left; /* Начинается слева */
@@ -167,12 +183,12 @@ p {
 
 /* Hover текста */
 .btn-link:hover {
-    color: var(--gold-2); /* Текст становится золотым */
+    color: var(--gold-1); /* Текст становится золотым */
 }
 
 /* Анимация линии */
 .btn-link:hover::after {
-    background: var(--gold-2); /* Цвет меняется */
+    background: var(--gold-1); /* Цвет меняется */
     transform: scaleX(1); /* плавно растягивается */
 }
 
@@ -181,3 +197,435 @@ p {
     box-shadow: 0 0 0 3px rgba(201,162,77,.18); /* Обводка при фокусе */
 }
 
+/* Поля ввода */
+input[type=date],
+input[type=time],
+input[type=text] {
+    width: 100%; /* На всю ширину */
+    height: 44px; /* Высота */
+    padding: 0 10px; /* Внутренние отступы */
+    border-radius: var(--r-md); /* Скругление */
+    border: 1px solid rgba(255,255,255,.12); /* Рамка */
+    background: rgba(10, 10, 11, 0.96); /* Полупрозрачный фон */
+    color: var(--text-secondary); /* Цвет текста */
+    font-size: 13px;
+    line-height: 1.8;
+    letter-spacing: 0.2px; /* немного воздуха */
+    font-family: var(--font-text), sans-serif; /* Шрифт */
+    outline: none; /* Убираем стандартный outline */
+    transition: 0.25s; /* Плавность */
+    color-scheme: dark; /* Тёмная тема для системных элементов */
+}
+
+/* Фокус полей */
+input[type=date]:focus,
+input[type=time]:focus,
+input[type=text]:focus {
+    border-color: var(--gold-1); /* Золотая рамка */
+    box-shadow: 0 0 0 2px rgba(201,162,77,.1); /* Подсветка */
+}
+
+.customSelectWrapper {
+    position: relative;
+    width: 100%;
+    z-index: 20;
+    color: var(--text-secondary);
+}
+
+.customSelectNative {
+    display: none;
+}
+
+.customSelectTrigger {
+    width: 100%;
+    height: 44px;
+    padding: 0 16px;
+    border-radius: var(--r-md);
+    border: 1px solid rgba(255,255,255,.12);
+    background: rgba(10, 10, 11, 0.96);
+    color: var(--text-secondary);
+    font-size: 13px;
+    line-height: 1.8;
+    letter-spacing: 0.2px;
+    font-family: var(--font-text), sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: 0.25s;
+    text-align: left;
+}
+
+.customSelectTrigger:focus,
+.customSelectWrapper.open .customSelectTrigger {
+    border-color: var(--gold-1);
+    box-shadow: 0 0 0 2px rgba(201,162,77,.1);
+    outline: none;
+}
+
+.customSelectText {
+    color: var(--text-secondary);
+}
+
+.customSelectArrow {
+    color: var(--text-secondary);
+    font-size: 18px;
+    line-height: 1;
+    transition: transform 0.25s ease, color 0.25s ease;
+}
+
+.customSelectWrapper.open .customSelectArrow {
+    transform: rotate(180deg);
+    color: var(--gold-1);
+}
+
+.customSelectDropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: 100%;
+    background: rgba(10, 10, 11, 0.96);
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: var(--r-lg);
+    box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+    z-index: 50;
+}
+
+.customSelectWrapper.open .customSelectDropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.customSelectOption {
+    padding: 12px 16px;
+    color: var(--text-secondary);
+    font-size: 13px;
+    line-height: 1;
+    letter-spacing: 0.2px;
+    font-family: var(--font-text), sans-serif;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+    text-align: left;
+}
+
+.customSelectOption:hover {
+    background: rgba(201,162,77,.12);
+    color: var(--text);
+}
+
+.customSelectOption.selected {
+    background: linear-gradient(
+            135deg,
+            var(--gold-2) 0%,
+            var(--gold-1) 40%,
+            var(--gold-3) 100%
+    );
+    color: #000;
+}
+
+.customSelectWrapper.open-up .customSelectDropdown {
+    top: auto;
+    bottom: calc(100% + 8px);
+}
+
+/* Иконка календаря */
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(1); /* Делает иконку светлой */
+}
+
+.flatpickr-calendar {
+    background: rgba(10, 10, 11, 0.96);
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: var(--r-lg);
+    box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    color: var(--text-secondary);
+    font-size: 13px;
+    letter-spacing: 0.2px;
+    overflow: hidden;
+}
+
+.flatpickr-months {
+    position: relative;
+    padding: 6px 14px 6px 14px;
+    font-size: 13px;
+    line-height: 1.8;
+    letter-spacing: 0.2px; /* немного воздуха */
+}
+
+.flatpickr-month {
+    height: 44px;
+    font-size: 13px;
+    letter-spacing: 0.2px; /* немного воздуха */
+    align-items: center;
+    justify-content: center;
+}
+
+.flatpickr-current-month {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding-top: 4px;
+    font-size: 13px;
+    line-height: 1.8;
+    letter-spacing: 0.2px; /* немного воздуха */
+
+}
+
+.flatpickr-current-month .flatpickr-monthDropdown-months {
+    color: var(--text);
+    font-family: var(--font-title), serif;
+    font-size: 13px;
+    line-height: 1.8;
+    letter-spacing: 0.2px; /* немного воздуха */
+    font-weight: 500;
+    background: transparent;
+    align-items: center;
+    justify-content: center;
+}
+
+.flatpickr-current-month input.cur-year {
+    color: var(--text);
+    font-family: var(--font-text), sans-serif;
+    font-size: 13px;
+    line-height: 1.8;
+    letter-spacing: 0.2px; /* немного воздуха */
+    font-weight: 500;
+    align-items: center;
+    justify-content: center;
+}
+
+.flatpickr-weekdays .flatpickr-weekday {
+    color: var(--gold-1);
+    font-family: var(--font-text), sans-serif;
+    font-size: 13px;
+    line-height: 1.8;
+    letter-spacing: 0.2px; /* немного воздуха */
+    text-transform: uppercase;
+    padding: 10px 0;
+    align-items: center;
+    justify-content: center;
+}
+
+.flatpickr-day {
+    display: inline-flex;
+    color: var(--text-secondary);
+    border-radius: 10px;
+    font-size: 13px;
+    line-height: 1;
+    letter-spacing: 0.2px; /* немного воздуха */
+    align-items: center;
+    justify-content: center;
+}
+
+.flatpickr-day:hover {
+    background: rgba(138, 106, 47, 0.3);
+    border-color: transparent;
+}
+
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange {
+    background: linear-gradient(
+            135deg,
+            var(--gold-2) 0%,
+            var(--gold-1) 40%,
+            var(--gold-3) 100%
+    );
+    border-color: var(--gold-1);
+    color: #000;
+    box-shadow: 0 4px 12px rgba(201,162,77,.25);
+}
+
+.flatpickr-day.selected:hover {
+    background: linear-gradient(
+            135deg,
+            #B32626 0%,
+            #7A1F1F 40%,
+            #6A1414 100%
+    );
+    border-color: #B32626;
+    color: #000;
+}
+
+.flatpickr-day.flatpickr-disabled,
+.flatpickr-day.flatpickr-disabled:hover {
+    color: rgba(255,255,255,.38);
+    background: transparent;
+    border-color: transparent;
+}
+
+.flatpickr-day.today {
+    border-color: var(--gold-1);
+}
+
+.flatpickr-day.today:hover {
+    border-color: #B32626;
+    background: transparent;
+}
+
+/* Дни предыдущего и следующего месяца */
+.flatpickr-day.prevMonthDay,
+.flatpickr-day.nextMonthDay {
+    color: rgba(255,255,255,.15); /* Более тусклый цвет */
+    font-size: 13px;
+    line-height: 1;
+    letter-spacing: 0.2px; /* немного воздуха */
+    align-items: center;
+    justify-content: center;
+}
+
+/* Hover для дней предыдущего и следующего месяца */
+.flatpickr-day.prevMonthDay:hover,
+.flatpickr-day.nextMonthDay:hover {
+    background: rgba(201,162,77,.12) !important; /* Фон при наведении */
+    border-color: transparent !important; /* Убираем рамку */
+    color: rgba(255,255,255,.55) !important; /* Чуть ярче текст */
+}
+
+.flatpickr-calendar .flatpickr-months .flatpickr-prev-month,
+.flatpickr-calendar .flatpickr-months .flatpickr-next-month {
+    position: absolute !important;
+    top: 50% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 28px !important;
+    height: 28px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transform: translateY(-50%) !important;
+    font-size: 13px;
+}
+
+.flatpickr-calendar .flatpickr-months .flatpickr-prev-month {
+    left: 10px !important;
+}
+
+.flatpickr-calendar .flatpickr-months .flatpickr-next-month {
+    right: 10px !important;
+}
+
+.flatpickr-prev-month svg,
+.flatpickr-next-month svg {
+    width: 16px;
+    height: 16px;
+    display: block;
+    fill: var(--text-secondary) !important; /* Основной цвет стрелок */
+    color: var(--text-secondary) !important; /* Цвет SVG */
+    stroke: var(--text-secondary) !important; /* Если стрелка рисуется через stroke */
+    align-items: center;
+    justify-content: center;
+}
+
+/* Наведение на стрелки */
+.flatpickr-prev-month:hover svg,
+.flatpickr-next-month:hover svg,
+.flatpickr-prev-month:hover svg path,
+.flatpickr-next-month:hover svg path {
+    fill: var(--gold-1) !important; /* Цвет стрелки при наведении */
+    color: var(--gold-1) !important; /* Доп. страховка */
+    stroke: var(--gold-1) !important; /* Для stroke-стрелок */
+
+}
+
+/* Контейнер выбора времени */
+.flatpickr-time {
+    background: rgba(10, 10, 11, 0.96); /* берёт фон родителя */
+    border: none; /* убираем рамку */
+    border-top: 1px solid rgba(255,255,255,.08); /* тонкое разделение */
+    border-radius: 0; /* убираем скругление */
+    box-shadow: none; /* убираем тень */
+    height: 52px;
+    max-height: 52px;
+}
+
+.flatpickr-time .numInputWrapper {
+    background: transparent;
+    border: none;
+    height: 52px;
+    width: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flatpickr-time input.flatpickr-hour,
+.flatpickr-time input.flatpickr-minute {
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: var(--font-text), sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    box-shadow: none;
+    text-align: center;
+    height: 36px;
+    line-height: 36px;
+    padding: 0;
+}
+
+/* Двоеточие */
+.flatpickr-time .flatpickr-time-separator {
+    color: var(--text-secondary);
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 52px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+}
+
+/* AM/PM если вдруг появится */
+.flatpickr-time .flatpickr-am-pm {
+    background: transparent;
+    color: var(--text-secondary);
+    border: none;
+}
+
+/* Hover / focus */
+.flatpickr-time input.flatpickr-hour:focus,
+.flatpickr-time input.flatpickr-minute:focus,
+.flatpickr-time input.flatpickr-hour:hover,
+.flatpickr-time input.flatpickr-minute:hover {
+    color: var(--gold-1);
+}
+
+/* Стрелки вверх/вниз у часов и минут */
+.flatpickr-time .numInputWrapper span.arrowUp:after {
+    color: var(--text-secondary);
+}
+
+.flatpickr-time .numInputWrapper span.arrowDown:after {
+    color: var(--text-secondary);
+}
+
+/* Фон стрелок */
+.flatpickr-time .numInputWrapper span.arrowUp,
+.flatpickr-time .numInputWrapper span.arrowDown {
+    opacity: 1;
+}
+
+/* При наведении на стрелки */
+.flatpickr-time .numInputWrapper span.arrowUp:hover:after {
+    border-bottom-color: var(--gold-1);
+}
+
+.flatpickr-time .numInputWrapper span.arrowDown:hover:after {
+    border-top-color: var(--gold-2);
+}
+
+.flatpickr-input:focus,
+.flatpickr-input.active {
+    border-color: var(--gold-1);
+    box-shadow: 0 0 0 2px rgba(201,162,77,.1);
+}

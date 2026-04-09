@@ -1,0 +1,66 @@
+.piibuPage {
+    background-image:
+            linear-gradient(
+                    90deg, /* Направление градиента (слева направо) */
+                    rgba(0,0,0,.55) 0%, /* Левый край — тёмный */
+                    rgba(0,0,0,.42) 55%, /* Центр — менее тёмный */
+                    rgba(0,0,0,.55) 100% /* Правый край — тёмный */
+            ),
+            url("../img/piibud.png"); /* Фоновое изображение */
+}
+
+.piibuCardTop {
+    display: grid; /* Сетка для двух колонок */
+    grid-template-columns: 1.35fr .65fr; /* Левая часть шире правой */
+    gap: 0; /* Без промежутка */
+}
+
+.piibuName {
+    font-family: var(--font-title), serif;
+    letter-spacing: 0.2px;
+    padding-bottom: 5px;
+}
+
+.piibuDescription {
+    font-family: var(--font-text), sans-serif;
+    color: var(--text-secondary);
+    padding-bottom: 25px;
+    font-size: 13px;
+}
+
+.piibuPriceLabel {
+    font-size: 13px;
+    font-family: var(--font-text), sans-serif;
+}
+
+.piibuPriceValue {
+    font-family: var(--font-title), serif;
+    color: var(--gold-1);
+}
+
+.maitsedList {
+    padding: 20px 20px 20px 20px;
+    border-radius: var(--r-md); /* Скругление */
+    border: 1px solid rgba(255,255,255,.12); /* Рамка */
+    background: rgba(10, 10, 11, 0.96); /* Полупрозрачный фон */
+    color: var(--text-secondary); /* Цвет текста */
+    line-height: 1;
+    margin-top: 25px;
+    display: grid; /* Сетка для двух колонок */
+    grid-template-columns: 1fr 1fr; /* Левая часть шире правой */
+    gap: 40px; /* Без промежутка */
+}
+
+.maitseItem {
+    line-height: 1;
+}
+
+.maitseTitle {
+    color: var(--text);
+}
+
+.maitseDesc {
+    font-family: var(--font-text), sans-serif;
+    color: var(--text-secondary);
+    font-size: 13px;
+}

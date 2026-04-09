@@ -4,7 +4,7 @@
             <a href="?leht=avaleht.php">Avaleht</a>
         </li>
         <li>
-            <a href="?leht=jsContent.php">Menüü</a>
+            <a href="?leht=piibud.php">Menüü</a>
             <ul class="dropdownMenuu">
                 <li>
                     <a href="?leht=piibud.php">Piibud</a>
@@ -16,6 +16,10 @@
                     <a href="?leht=snakid.php">Snäkid</a>
                 </li>
             </ul>
+        </li>
+        <li>
+            <a href="?leht=login.php">
+                <img src="img/login.png" class="login-icon"> Login</a>
         </li>
     </ul>
 </nav>

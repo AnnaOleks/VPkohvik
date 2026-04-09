@@ -2,22 +2,23 @@ header {
     position: sticky; /* Закрепляет header при прокрутке */
     top: 0; /* Прилипает к верхней границе окна */
     z-index: 50; /* Размещает header выше обычных элементов */
+    width: 100%;
 }
 #header {
     width: 100%; /* Растягивает блок на всю ширину родителя */
     display: flex; /* Включает flex-расположение дочерних элементов */
-    padding: 14px 56px; /* Внутренние отступы: 14px сверху/снизу, 56px слева/справа */
     justify-content: space-between; /* Выравнивание по главной оси по краям */
     align-items: center; /* выравнивание по вертикали */
     background:
             linear-gradient(180deg, rgba(0,0,0,.70), rgba(0,0,0,.35));
     backdrop-filter: blur(10px);
-
     border-bottom: 1px solid rgba(255,255,255,.08);
+    padding-top: 15px;
+    padding-bottom: 15px;
 }
 #logoContainer {
-    width: 30%; /* Ширина контейнера для логотипа */
-    padding: 0; /* Убирает внутренние отступы */
+    width: max-content; /* Ширина контейнера для логотипа */
+    padding-left: 80px;
     display: flex; /* Делает контейнер flex-блоком */
 }
 #logo {

@@ -1,0 +1,140 @@
+.categoryPage {
+    position: relative;
+    padding: 80px 300px 80px 300px;
+    background-color: var(--bg);
+
+    background-attachment: fixed; /* Фон не прокручивается вместе со страницей */
+    background-repeat: no-repeat; /* Изображение не повторяется */
+    background-position: top right; /* Выравнивание фона по правому краю и верху */
+    overflow: hidden; /* Обрезает всё, что выходит за границы блока */
+}
+
+.categoryContainer {
+    position: relative;
+    z-index: 3;
+    margin: 0 auto;
+}
+
+.menuuHeader {
+    text-align: center; /* Центрируем текст */
+    margin-bottom: 34px; /* Отступ вниз */
+}
+
+/* Заголовок MENÜÜ */
+.menuuTitle {
+    margin: 0; /* Убираем стандартный отступ */
+    line-height: 0.9; /* Уменьшаем расстояние между строками */
+    letter-spacing: 2px; /* Небольшая разрядка букв */
+    color: var(--text); /* Основной цвет текста */
+    text-transform: uppercase; /* Все буквы заглавные */
+    text-shadow: 0 0 20px rgba(201,162,77,.12); /* Лёгкое свечение */
+}
+
+/* Золотая линия под заголовком */
+.menuuTitleLine {
+    width: 220px; /* Ширина линии */
+    height: 1px; /* Толщина линии */
+    margin: 18px auto 0 auto; /* Отступ сверху и центрирование */
+    background: linear-gradient(to right, transparent, var(--gold-1), transparent); /* Градиентная линия */
+    position: relative; /* Для декоративной точки */
+}
+
+/* Светящаяся точка на линии */
+.menuuTitleLine::after {
+    content: ""; /* Обязательное свойство для псевдоэлемента */
+    position: absolute; /* Абсолютное позиционирование */
+    top: 50%; /* По вертикали в центре */
+    left: 50%; /* По горизонтали в центре */
+    transform: translate(-50%, -50%); /* Точное центрирование */
+    width: 8px; /* Ширина точки */
+    height: 8px; /* Высота точки */
+    border-radius: 50%; /* Делаем круг */
+    background: var(--gold-2); /* Цвет точки */
+    box-shadow: 0 0 14px rgba(229,199,107,.75); /* Свечение */
+}
+
+/* Контейнер вкладок */
+.menuuTabs {
+    display: flex; /* Располагаем вкладки в линию */
+    justify-content: center; /* Центрируем вкладки */
+    align-items: center; /* Выравниваем по вертикали */
+    gap: 40px; /* Расстояние между вкладками */
+    margin-bottom: 34px; /* Отступ до карточки */
+    flex-wrap: wrap; /* Позволяем перенос на маленьком экране */
+}
+
+.menuuTab {
+    position: relative;
+    color: var(--text); /* Цвет текста */
+    font-size: 13px;
+    line-height: 1.8;
+    letter-spacing: 2px;
+    font-weight: 500;
+    font-family: var(--font-text), sans-serif;
+}
+
+.menuuTab:hover {
+    color: var(--gold-1); /* Текст становится золотым */
+}
+
+/* Линия под кнопкой */
+.menuuTab::after {
+    content: ""; /* Обязательное свойство */
+    position: absolute; /* Абсолютное позиционирование */
+    left: 0; /* Слева */
+    bottom: -6px; /* Чуть ниже текста */
+    width: 100%; /* Во всю ширину */
+    height: 1px; /* Толщина линии */
+    background: var(--gold-1); /* Золотой цвет */
+    transform: scaleX(0); /* Скрыта (сжата) */
+    transform-origin: left; /* Начинается слева */
+    transition: var(--t); /* Плавность */
+}
+
+
+.menuuTab:hover::after {
+    background: var(--gold-1); /* Цвет меняется */
+    transform: scaleX(1); /* плавно растягивается */
+}
+
+.categoryList {
+    margin: 0 80px 80px 80px;
+    padding: 30px 30px 30px 30px;
+    align-items: start;
+    text-align: left; /* Текст слева */
+    border-radius: var(--r-lg);
+}
+
+.categoryCard {
+    padding-bottom: 50px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
