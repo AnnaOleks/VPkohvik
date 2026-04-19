@@ -1,3 +1,8 @@
+<?php
+include('config.php');
+session_start();
+require_once("functions.php");
+?>
 <nav>
     <ul class="navMenuu">
         <li>
@@ -18,8 +23,17 @@
             </ul>
         </li>
         <li>
-            <a href="?leht=login.php">
-                <img src="img/login.png" class="login-icon"> Login</a>
+            <?php if (isAdmin()): ?>
+                <!-- Если админ — показываем рабочий стол -->
+                <a href="?leht=dashboard.php">
+                    🛠 Juhtpaneel
+                </a>
+            <?php else: ?>
+                <!-- Если не залогинен — показываем логин -->
+                <a href="?leht=login.php">
+                    <img src="img/login.png" class="login-icon" alt="Login"> Login
+                </a>
+            <?php endif; ?>
         </li>
     </ul>
 </nav>

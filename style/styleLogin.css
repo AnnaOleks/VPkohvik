@@ -1,0 +1,23 @@
+#login {
+    margin-bottom: 20px;
+}
+
+.loginContainer {
+    margin: 0 250px 0 250px;
+}
+
+.btnLogi {
+    width: 100%;
+    margin: 40px 0;
+}
+
+.avalehtActions{
+    gap: 60px;
+    justify-content: center;
+}
+.btn-loginPage {
+    font-size: 13px;
+    text-transform: unset;
+    letter-spacing: 0;
+    color: var(--text-secondary);
+}

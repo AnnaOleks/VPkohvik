@@ -1,0 +1,54 @@
+.dashboardPage {
+    padding: 80px 0;
+}
+
+.dashboardTitle {
+    display: grid; /* Сетка для двух колонок */
+    grid-template-columns: 1.35fr .65fr; /* Левая часть шире правой */
+    gap: 0; /* Без промежутка */
+}
+
+.dasboardCards {
+    grid-template-columns: 1fr 1fr 1fr;
+    display: grid; /* Карточки в сетке */
+    gap: 18px; /* Расстояние между карточками */
+}
+
+.dashboardItemTitle {
+    margin: 0 0 18px 0; /* Отступ снизу */
+    font-family: var(--font-text), sans-serif; /* Основной шрифт */
+    font-size: 18px; /* Размер названия */
+    color: #f3f3f3; /* Светлый текст */
+}
+
+.dashboardItemDescription {
+    margin: 0 0 8px 0; /* Отступ между строками */
+    font-family: var(--font-text), sans-serif; /* Основной шрифт */
+    font-size: 13px; /* Размер текста */
+    color: rgba(255,255,255,.62); /* Приглушённый текст */
+    line-height: 1.8; /* Высота строки */
+}
+
+.dashboardInfo {
+    justify-content: center; /* Центрируем вкладки */
+    align-items: center; /* Выравниваем по вертикали */
+    position: relative;
+    color: var(--text); /* Цвет текста */
+    font-size: 13px;
+    line-height: 1.8;
+    letter-spacing: 2px;
+    font-weight: 500;
+    font-family: var(--font-text), sans-serif;
+    text-transform: uppercase; /* Все буквы заглавные */
+    margin-bottom: 34px;
+}
+
+.dashboardDiscription {
+    position: relative;
+    color: var(--text); /* Цвет текста */
+    font-size: 13px;
+    line-height: 1.8;
+    letter-spacing: 2px;
+    font-weight: 500;
+    font-family: var(--font-text), sans-serif;
+}

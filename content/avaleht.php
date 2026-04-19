@@ -19,7 +19,7 @@ function clearVarsExcept($url, $varname) {
             <p class="avalehtSlogan">Suits. Rahu. Aeg iseendale</p>
             <div class="avalehtActions">
                 <input type="submit" name="btnBroneeri" value="BRONEERI" class="btn">
-                <a href="?leht=menuu.php" class="btn-link">
+                <a href="?leht=piibud.php" class="btn-link">
                     <span>AVA MENÜÜ</span>
                     <span>›</span>
                 </a>
@@ -82,7 +82,7 @@ function clearVarsExcept($url, $varname) {
                     <p>Kliendihind - 22 €</p>
                 </div>
             </div>
-            <a href="piibud.php" class="btn-link">
+            <a href="?leht=piibud.php" class="btn-link">
                 <span>VAATA PIIBUDE VALIKUT</span>
                 <span>›</span>
             </a>

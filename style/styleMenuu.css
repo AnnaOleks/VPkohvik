@@ -109,6 +109,9 @@
     padding-bottom: 50px;
 }
 
+.categoryCard:last-child {
+    padding-bottom: 0;
+}
 
 
 

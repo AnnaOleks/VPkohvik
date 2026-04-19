@@ -1,3 +1,9 @@
+<?php
+ob_start();
+session_start();
+include('config.php');
+?>
+
 <!DOCTYPE html>
 <html lang="et">
 <head>
@@ -10,6 +16,13 @@
     <link rel="stylesheet" href="style/styleAvaleht.css">
     <link rel="stylesheet" href="style/styleMenuu.css">
     <link rel="stylesheet" href="style/stylePiibud.css">
+    <link rel="stylesheet" href="style/styleJoogid.css">
+    <link rel="stylesheet" href="style/styleSnakid.css">
+    <link rel="stylesheet" href="style/styleLogin.css">
+    <link rel="stylesheet" href="style/styleFooter.css">
+    <link rel="stylesheet" href="style/styleRegistr.css">
+    <link rel="stylesheet" href="style/styleDashboard.css">
+    <link rel="stylesheet" href="style/styleAdminPiibud.css">
 </head>
 
 <body>
@@ -54,7 +67,12 @@ include("footer.php");
             const text = wrapper.querySelector(".customSelectText");
             const options = wrapper.querySelectorAll(".customSelectOption");
 
-            trigger.addEventListener("click", function () {
+            if (!nativeSelect || !trigger || !text || !options.length) {
+                return;
+            }
+
+            trigger.addEventListener("click", function (event) {
+                event.stopPropagation();
 
                 document.querySelectorAll(".customSelectWrapper").forEach(function (item) {
                     if (item !== wrapper) {
@@ -64,7 +82,7 @@ include("footer.php");
                 });
 
                 const rect = wrapper.getBoundingClientRect();
-                const dropdownHeight = 220; // как max-height
+                const dropdownHeight = 220;
                 const spaceBelow = window.innerHeight - rect.bottom;
                 const spaceAbove = rect.top;
 
@@ -91,6 +109,7 @@ include("footer.php");
 
                     option.classList.add("selected");
                     wrapper.classList.remove("open");
+                    wrapper.classList.remove("open-up");
                 });
             });
         });
@@ -105,5 +124,27 @@ include("footer.php");
         });
     });
 </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const btn = document.getElementById("toggleFormBtn");
+        const form = document.getElementById("addForm");
+
+        if (!btn || !form) {
+            return;
+        }
+
+        btn.addEventListener("click", function () {
+            form.classList.toggle("hidden");
+
+            if (form.classList.contains("hidden")) {
+                btn.textContent = "+ Lisa uus piip";
+            } else {
+                btn.textContent = "− Peida vorm";
+            }
+        });
+    });
+</script>
 </body>
 </html>
+
+<?php ob_end_flush(); ?>

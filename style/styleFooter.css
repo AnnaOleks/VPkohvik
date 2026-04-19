@@ -1,0 +1,105 @@
+footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid rgba(255,255,255,.08); /* тонкая линия разделения */
+}
+
+.footerContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 40px;
+    padding: 40px 80px;
+}
+
+.footerCol {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.footerCol a {
+    display: block;
+}
+
+.footerVP {
+    margin: 0; /* Убираем стандартные отступы заголовка */
+    font-size: 60px; /* Размер текста */
+    line-height: 0.9; /* Уменьшаем расстояние между строками */
+    letter-spacing: 2px; /* Небольшая разрядка букв */
+    color: var(--text); /* Основной цвет текста */
+    text-align: center;
+}
+
+.footerKohvik {
+    margin-top: 12px; /* Отступ сверху */
+    font-size: 10px; /* Размер текста */
+    letter-spacing: 8px; /* Большая разрядка (эффект бренда) */
+    text-transform: uppercase; /* Все буквы большие */
+    color: var(--text-secondary); /* Вторичный цвет */
+    text-align: center;
+}
+
+.footerSlogan {
+    margin-top: 20px;
+    font-size: 13px; /* Размер текста */
+    line-height: 1.7;
+    color: var(--text-secondary); /* Вторичный цвет */
+    letter-spacing: 1px; /* Лёгкая разрядка */
+    text-align: center;
+}
+
+.footerTitle {
+    font-family: var(--font-title), serif;
+    font-size: 13px;
+    line-height: 1.7;
+    font-weight: 500; /* Насыщенность шрифта */
+    letter-spacing: 2px; /* Расстояние между буквами */
+    text-transform: uppercase;
+    color: var(--text);
+    padding-bottom: 10px;
+}
+
+.footerInfo {
+    font-family: var(--font-text), sans-serif;
+    font-size: 13px;
+    color: var(--text-secondary);
+    text-align: center;
+    line-height: 1.8;
+}
+
+.btn-footerLink {
+    background: transparent; /* Без фона */
+    position: relative; /* Нужно для псевдоэлемента */
+    font-weight: 500; /* Жирность */
+    font-family: var(--font-text), sans-serif; /* Шрифт */
+    font-size: 13px;
+    cursor: pointer; /* Курсор */
+    transition: var(--t); /* Плавность */
+    text-transform: unset;
+    letter-spacing: 0;
+    color: var(--text-secondary);
+}
+
+/* Линия под кнопкой */
+.btn-footerLink::after {
+    content: ""; /* Обязательное свойство */
+    position: absolute; /* Абсолютное позиционирование */
+    left: 0; /* Слева */
+    bottom: -1px; /* Чуть ниже текста */
+    width: 100%; /* Во всю ширину */
+    height: 1px; /* Толщина линии */
+    background: var(--gold-1); /* Золотой цвет */
+    transform: scaleX(0); /* Скрыта (сжата) */
+    transform-origin: left; /* Начинается слева */
+    transition: var(--t); /* Плавность */
+}
+
+/* Hover текста */
+.btn-footerLink:hover {
+    color: var(--gold-1); /* Текст становится золотым */
+}
+
+.btn-footerLink:hover::after {
+    background: var(--gold-1); /* Цвет меняется */
+    transform: scaleX(1); /* плавно растягивается */
+}

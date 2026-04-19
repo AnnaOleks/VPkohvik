@@ -1,0 +1,35 @@
+.joogiPage {
+    background-image:
+            linear-gradient(
+                    90deg, /* Направление градиента (слева направо) */
+                    rgba(0,0,0,.55) 0%, /* Левый край — тёмный */
+                    rgba(0,0,0,.42) 55%, /* Центр — менее тёмный */
+                    rgba(0,0,0,.55) 100% /* Правый край — тёмный */
+            ),
+            url("../img/joogid3.png"); /* Фоновое изображение */
+}
+
+.subcategoryItems {
+    padding-top: 20px;
+}
+
+.subcategoryItems .maitseItem {
+    margin-bottom: 24px;
+}
+
+.subcategoryItems .maitseItem:last-child {
+    margin-bottom: 0;
+}
+
+.subcategoryItems .maitseTitle {
+    margin: 0 0 6px 0;
+}
+
+.subcategoryItems .maitseDesc {
+    margin: 0 0 8px 0;
+    line-height: 1.5;
+}
+
+.subcategoryItems .piibuPriceRow {
+    margin: 0 0 6px 0;
+}

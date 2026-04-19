@@ -200,7 +200,9 @@ p {
 /* Поля ввода */
 input[type=date],
 input[type=time],
-input[type=text] {
+input[type=text],
+input[type=email],
+input[type=password] {
     width: 100%; /* На всю ширину */
     height: 44px; /* Высота */
     padding: 0 10px; /* Внутренние отступы */
@@ -220,7 +222,9 @@ input[type=text] {
 /* Фокус полей */
 input[type=date]:focus,
 input[type=time]:focus,
-input[type=text]:focus {
+input[type=text]:focus,
+input[type=email]:focus,
+input[type=password]:focus{
     border-color: var(--gold-1); /* Золотая рамка */
     box-shadow: 0 0 0 2px rgba(201,162,77,.1); /* Подсветка */
 }
@@ -228,7 +232,7 @@ input[type=text]:focus {
 .customSelectWrapper {
     position: relative;
     width: 100%;
-    z-index: 20;
+    z-index: 200;
     color: var(--text-secondary);
 }
 
@@ -288,12 +292,14 @@ input[type=text]:focus {
     border: 1px solid rgba(255,255,255,.10);
     border-radius: var(--r-lg);
     box-shadow: 0 10px 30px rgba(0,0,0,.35);
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 260px;
     opacity: 0;
     visibility: hidden;
     transform: translateY(-6px);
     transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
-    z-index: 50;
+    z-index: 999;
 }
 
 .customSelectWrapper.open .customSelectDropdown {

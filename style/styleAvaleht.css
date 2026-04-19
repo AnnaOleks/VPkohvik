@@ -12,7 +12,8 @@
     background-repeat: no-repeat; /* Изображение не повторяется */
     background-position: top right; /* Выравнивание фона по правому краю и верху */
     position: relative; /* Позволяет позиционировать вложенные элементы относительно body */
-    overflow: hidden; /* Обрезает всё, что выходит за границы блока */
+    overflow: visible; /* Обрезает всё, что выходит за границы блока */
+    padding-bottom: 80px;
 }
 
 .avaleht1Ekraan {
@@ -33,6 +34,7 @@
     flex-direction: column; /* Элементы идут сверху вниз */
     justify-content: center; /* Центрируем по вертикали */
     padding-left: 80px;
+    align-items: flex-start;
 }
 
 .avalehtBrand {
@@ -65,9 +67,15 @@
 }
 
 .avalehtActions {
-    display: flex; /* Flex-контейнер для кнопок */
-    align-items: center; /* Выравнивание по вертикали */
-    gap: 18px; /* Расстояние между кнопками */
+    display: flex;
+    justify-content: flex-start; /* прижимаем влево */
+    align-items: center;
+    gap: 18px;
+}
+
+.avalehtActions a {
+    display: inline-flex;
+    align-items: flex-start;
 }
 
 .avaleht2Ekraan {
@@ -82,6 +90,7 @@
     align-items: start;
     text-align: left; /* Текст слева */
     border-radius: var(--r-lg);
+    overflow: visible;
 }
 
 .bronBlock {
@@ -91,6 +100,8 @@
     display: flex; /* Flex */
     flex-direction: column; /* Вертикальное расположение */
     justify-content: flex-start;
+    overflow: visible;
+    position: relative;
 }
 
 .avalehtBronForm:first-of-type {

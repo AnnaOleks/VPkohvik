@@ -1,5 +1,5 @@
 <?php
-$currentPage = $_GET['leht'] ?? 'menuu.php';
+$currentPage = $_GET['leht'] ?? 'menuuTabs.php';
 ?>
 
 <div class="menuuTabs">
