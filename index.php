@@ -2,6 +2,7 @@
 ob_start();
 session_start();
 include('config.php');
+require_once('functions.php');
 ?>
 
 <!DOCTYPE html>
@@ -23,6 +24,7 @@ include('config.php');
     <link rel="stylesheet" href="style/styleRegistr.css">
     <link rel="stylesheet" href="style/styleDashboard.css">
     <link rel="stylesheet" href="style/styleAdminPiibud.css">
+    <link rel="stylesheet" href="style/styleAdminJoogid.css">
 </head>
 
 <body>

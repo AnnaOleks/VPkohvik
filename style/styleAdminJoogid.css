@@ -1,0 +1,63 @@
+/* Форма добавления напитка */
+#addForm .formGrid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 20px 24px;
+    align-items: start;
+}
+
+/* 1 строка: название + описание */
+#addForm .formGroup:nth-child(1),
+#addForm .formGroup:nth-child(2) {
+    grid-column: span 3;
+}
+
+/* 2 строка: цена + категория + доступность */
+#addForm .formGroup:nth-child(3),
+#addForm .formGroup:nth-child(4),
+#addForm .formGroup:nth-child(5) {
+    grid-column: span 2;
+}
+
+/* Чтобы поля не сжимались криво */
+#addForm .formGroup {
+    min-width: 0;
+}
+
+#addForm .formGroup input,
+#addForm .customSelectWrapper,
+#addForm .customSelectTrigger,
+#addForm .customSelectNative {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Планшет */
+@media (max-width: 900px) {
+    #addForm .formGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    #addForm .formGroup:nth-child(1),
+    #addForm .formGroup:nth-child(2),
+    #addForm .formGroup:nth-child(3),
+    #addForm .formGroup:nth-child(4),
+    #addForm .formGroup:nth-child(5) {
+        grid-column: span 1;
+    }
+}
+
+/* Телефон */
+@media (max-width: 640px) {
+    #addForm .formGrid {
+        grid-template-columns: 1fr;
+    }
+
+    #addForm .formGroup:nth-child(1),
+    #addForm .formGroup:nth-child(2),
+    #addForm .formGroup:nth-child(3),
+    #addForm .formGroup:nth-child(4),
+    #addForm .formGroup:nth-child(5) {
+        grid-column: span 1;
+    }
+}

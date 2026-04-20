@@ -23,16 +23,21 @@ require_once("functions.php");
             </ul>
         </li>
         <li>
-            <?php if (isAdmin()): ?>
+            <?php if (isLoggedIn()): ?>
                 <!-- Если админ — показываем рабочий стол -->
                 <a href="?leht=dashboard.php">
-                    🛠 Juhtpaneel
+                    🛠 Juhtpaneel (<?= htmlspecialchars($_SESSION['username']) ?>)
                 </a>
             <?php else: ?>
                 <!-- Если не залогинен — показываем логин -->
                 <a href="?leht=login.php">
                     <img src="img/login.png" class="login-icon" alt="Login"> Login
                 </a>
+            <?php endif; ?>
+        </li>
+        <li>
+            <?php if (isLoggedIn()): ?>
+                <a href="?leht=logout.php" class="adminLogout">Logout</a>
             <?php endif; ?>
         </li>
     </ul>

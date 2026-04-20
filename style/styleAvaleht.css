@@ -104,18 +104,6 @@
     position: relative;
 }
 
-.avalehtBronForm:first-of-type {
-    display: flex;
-    gap: 18px;
-    margin-bottom: 18px;
-}
-
-/* Вторая строка (select) */
-.avalehtBronForm:last-of-type {
-    display: block;
-    margin-bottom: 28px;
-}
-
 .piibudBlock {
     width: 100%; /* Блок занимает всю ширину своей колонки */
     padding: 0; /* Внутренний отступ */
@@ -176,3 +164,91 @@
     margin-bottom: 0; /* У последнего абзаца убираем нижний отступ */
 }
 
+.avalehtBronForm.row1 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-bottom: 18px;
+}
+
+.avalehtBronForm.row2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 18px;
+    margin-bottom: 28px;
+}
+
+.avalehtBronForm.row1 input,
+.avalehtBronForm.row2 input,
+.avalehtBronForm.row2 .customSelectWrapper {
+    width: 100%;
+    min-width: 0;
+}
+
+.toast {
+    position: fixed;
+    top: 100px;
+    right: 30px;
+    min-width: 280px;
+    max-width: 420px;
+    padding: 16px 20px;
+    border-radius: 16px;
+    color: #fff;
+    font-size: 15px;
+    line-height: 1.4;
+    box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    animation: toastSlideIn .35s ease;
+    backdrop-filter: blur(8px);
+}
+
+.toastSuccess {
+    background: linear-gradient(
+            135deg,
+            #4CAF50 0%,
+            #2E7D32 40%,
+            #1B5E20 100%
+    );
+    border-color: #4CAF50;
+    color: var(--text);
+}
+
+.toastError {
+    background: linear-gradient(
+            135deg,
+            #B32626 0%,
+            #7A1F1F 40%,
+            #6A1414 100%
+    );
+    border-color: #B32626;
+    color: var(--text);
+}
+
+.toastClose {
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+}
+
+.toastClose:hover {
+    opacity: 0.75;
+}
+
+@keyframes toastSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-15px) translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) translateX(0);
+    }
+}

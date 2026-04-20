@@ -202,7 +202,8 @@ input[type=date],
 input[type=time],
 input[type=text],
 input[type=email],
-input[type=password] {
+input[type=password],
+input[type=number]{
     width: 100%; /* На всю ширину */
     height: 44px; /* Высота */
     padding: 0 10px; /* Внутренние отступы */
@@ -224,7 +225,8 @@ input[type=date]:focus,
 input[type=time]:focus,
 input[type=text]:focus,
 input[type=email]:focus,
-input[type=password]:focus{
+input[type=password]:focus,
+input[type=number]:focus{
     border-color: var(--gold-1); /* Золотая рамка */
     box-shadow: 0 0 0 2px rgba(201,162,77,.1); /* Подсветка */
 }
@@ -336,7 +338,7 @@ input[type=password]:focus{
 }
 
 .customSelectWrapper.open-up .customSelectDropdown {
-    top: auto;
+    top: auto !important;
     bottom: calc(100% + 8px);
 }
 

@@ -1,12 +1,13 @@
 <?php
-include(__DIR__ . '/../config.php');
+session_start();
+include('config.php');
+require_once("functions.php");
 
 $currentPage = $_GET['leht'] ?? 'login.php';
 
-require_once("functions.php");
-
 global $yhendus;
-global $isadmin;
+
+$loginError = "";
 
 if (!empty($_POST['login']) && !empty($_POST['password'])) {
     $login = htmlspecialchars(trim($_POST['login']));
@@ -23,35 +24,25 @@ if (!empty($_POST['login']) && !empty($_POST['password'])) {
     $paring->bind_result($userName, $email, $passwordFromDb, $role);
 
     if ($paring->fetch()) {
+
         if (verifyAspNetIdentityPassword($pass, $passwordFromDb)) {
-            if ($role == 2) {
-                $_SESSION['Admin'] = true;
-                $_SESSION['Worker'] = false;
-                $_SESSION['Guest'] = false;
-            } elseif ($role == 1) {
-                $_SESSION['Admin'] = false;
-                $_SESSION['Worker'] = true;
-                $_SESSION['Guest'] = false;
-            } else {
-                $_SESSION['Admin'] = false;
-                $_SESSION['Worker'] = false;
-                $_SESSION['Guest'] = $userName;
-            }
 
-            $_SESSION['UserName'] = $userName;
-            $_SESSION['Email'] = $email;
+            $_SESSION['role'] = (int)$role;
+            $_SESSION['username'] = $userName;
+            $_SESSION['email'] = $email;
 
-            echo "<script>window.location.href='index.php?leht=dashboard.php';</script>";
+            header("Location: ?leht=dashboard.php");
             exit();
+
         } else {
-            echo "<script>alert('Parool on vale!');</script>";
+            $loginError = "Vale parool!";
         }
+
     } else {
-        echo "<script>alert('Kasutajat ei leitud!');</script>";
+        $loginError = "Kasutajat ei leitud!";
     }
 
     $paring->close();
-    $yhendus->close();
 }
 ?>
 

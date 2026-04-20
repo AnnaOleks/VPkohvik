@@ -1,46 +1,107 @@
 <?php
+session_start();
+require_once("functions.php");
+
+if (!isLoggedIn()) {
+    header("Location: ?leht=login.php");
+    exit();
+}
+
 /* Текущая страница из GET-параметра */
-$currentPage = $_GET['leht'] ?? 'admin.php';
+$currentPage = $_GET['leht'] ?? 'dashboard.php';
 
 /* Разделы админ-панели */
-$adminSections = [
-    [
-        "title" => "Piibud",
-        "description" => "Halda vesipiipude andmebaasi, maitseid ja hindu.",
-        "link" => "?leht=adminPiibud.php",
-        "icon" => "💨"
-    ],
-    [
-        "title" => "Joogid",
-        "description" => "Muuda jookide nimekirja, kirjeldusi ja hindu.",
-        "link" => "?leht=admin_joogid.php",
-        "icon" => "🍹"
-    ],
-    [
-        "title" => "Toidud",
-        "description" => "Halda toitude ja snäkkide andmebaasi.",
-        "link" => "?leht=admin_toidud.php",
-        "icon" => "🍽"
-    ],
-    [
-        "title" => "Broneeringud",
-        "description" => "Vaata, muuda või kustuta klientide broneeringuid.",
-        "link" => "?leht=admin_bron.php",
-        "icon" => "📅"
-    ],
-    [
-        "title" => "Kasutajad",
-        "description" => "Halda kasutajate andmeid ja rolle.",
-        "link" => "?leht=admin_users.php",
-        "icon" => "👤"
-    ],
-    [
-        "title" => "Graafik",
-        "description" => "Koosta ja muuda töötajate töögraafikut.",
-        "link" => "?leht=admin_graafik.php",
-        "icon" => "🕒"
-    ]
-];
+if (isAdmin()) {
+    $adminSections = [
+            [
+                    "title" => "Piibud",
+                    "description" => "Halda vesipiipude andmebaasi, maitseid ja hindu.",
+                    "link" => "?leht=adminPiibud.php",
+                    "icon" => "💨"
+            ],
+            [
+                    "title" => "Joogid",
+                    "description" => "Muuda jookide nimekirja, kirjeldusi ja hindu.",
+                    "link" => "?leht=adminJoogid.php",
+                    "icon" => "🍹"
+            ],
+            [
+                    "title" => "Toidud",
+                    "description" => "Halda toitude ja snäkkide andmebaasi.",
+                    "link" => "?leht=admin_toidud.php",
+                    "icon" => "🍽"
+            ],
+            [
+                    "title" => "Broneeringud",
+                    "description" => "Vaata, muuda või kustuta klientide broneeringuid.",
+                    "link" => "?leht=admin_bron.php",
+                    "icon" => "📅"
+            ],
+            [
+                    "title" => "Kasutajad",
+                    "description" => "Halda kasutajate andmeid ja rolle.",
+                    "link" => "?leht=admin_users.php",
+                    "icon" => "👤"
+            ],
+            [
+                    "title" => "Graafik",
+                    "description" => "Koosta ja muuda töötajate töögraafikut.",
+                    "link" => "?leht=admin_graafik.php",
+                    "icon" => "🕒"
+            ]
+    ];
+} elseif (isWorker()) {
+    $adminSections = [
+            [
+                    "title" => "Piibud",
+                    "description" => "Halda vesipiipude andmebaasi, maitseid ja hindu.",
+                    "link" => "?leht=adminPiibud.php",
+                    "icon" => "💨"
+            ],
+            [
+                    "title" => "Joogid",
+                    "description" => "Muuda jookide nimekirja, kirjeldusi ja hindu.",
+                    "link" => "?leht=adminJoogid.php",
+                    "icon" => "🍹"
+            ],
+            [
+                    "title" => "Toidud",
+                    "description" => "Halda toitude ja snäkkide andmebaasi.",
+                    "link" => "?leht=admin_toidud.php",
+                    "icon" => "🍽"
+            ],
+            [
+                    "title" => "Broneeringud",
+                    "description" => "Vaata, muuda või kustuta klientide broneeringuid.",
+                    "link" => "?leht=admin_bron.php",
+                    "icon" => "📅"
+            ],
+            [
+                    "title" => "Graafik",
+                    "description" => "Koosta ja muuda töötajate töögraafikut.",
+                    "link" => "?leht=admin_graafik.php",
+                    "icon" => "🕒"
+            ]
+    ];
+} elseif (isGuest()) {
+    $adminSections = [
+            [
+                    "title" => "Minu broneeringud",
+                    "description" => "Vaata oma aktiivseid ja varasemaid broneeringuid.",
+                    "link" => "?leht=minu_broneeringud.php",
+                    "icon" => "📅"
+            ],
+            [
+                    "title" => "Minu andmed",
+                    "description" => "Vaata ja muuda oma kasutajakonto andmeid.",
+                    "link" => "?leht=minu_andmed.php",
+                    "icon" => "👤"
+            ]
+    ];
+} else {
+    header("Location: ?leht=login.php");
+    exit();
+}
 ?>
 
 <section class="dashboardPage avaleht">
@@ -61,7 +122,9 @@ $adminSections = [
                 </div>
             </div>
             <div class="dasboardCards">
-                <?php foreach ($adminSections as $section): ?>
+
+                <?php
+                foreach ($adminSections as $section): ?>
                     <div class="piibuCard">
                         <a class="dashboardItem" href="<?= htmlspecialchars($section["link"]) ?>">
                             <div class="dashboardContent">
