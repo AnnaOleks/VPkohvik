@@ -93,7 +93,7 @@ if (isset($_GET["kustutaid"]) && isAdmin()) {
             <nav class="adminNav">
                 <a href="index.php?leht=adminPiibud.php" class="adminNavLink">Piibud</a>
                 <a href="index.php?leht=adminJoogid.php" class="adminNavLink active">Joogid</a>
-                <a href="index.php?leht=adminToidud.php" class="adminNavLink">Toidud</a>
+                <a href="index.php?leht=adminSnakid.php" class="adminNavLink">Toidud</a>
                 <a href="index.php?leht=adminBroneeringud.php" class="adminNavLink">Broneeringud</a>
                 <a href="index.php?leht=adminKasutajad.php" class="adminNavLink">Kasutajad</a>
                 <a href="index.php?leht=adminGraafik.php" class="adminNavLink">Graafik</a>

@@ -28,7 +28,7 @@ if (isAdmin()) {
             [
                     "title" => "Toidud",
                     "description" => "Halda toitude ja snäkkide andmebaasi.",
-                    "link" => "?leht=admin_toidud.php",
+                    "link" => "?leht=adminSnakid.php",
                     "icon" => "🍽"
             ],
             [
@@ -67,7 +67,7 @@ if (isAdmin()) {
             [
                     "title" => "Toidud",
                     "description" => "Halda toitude ja snäkkide andmebaasi.",
-                    "link" => "?leht=admin_toidud.php",
+                    "link" => "?leht=adminSnakid.php",
                     "icon" => "🍽"
             ],
             [

@@ -12,13 +12,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] < 1) {
     exit();
 }
 
-/* Получаем список брендов / категорий */
-$categories = [];
-$result = $yhendus->query("SELECT Id, Name FROM HookahBrands ORDER BY Name");
-
-while ($row = $result->fetch_assoc()) {
-    $categories[] = $row;
-}
+$categories = kysiSnakiKategooriad();
 
 /* Значения по умолчанию */
 $sorttulp = "Nimetus";
@@ -42,57 +36,52 @@ if (isset($_GET["category"])) {
 
 /* Добавление новой записи — только admin */
 if (isset($_POST["lisa"]) && isAdmin()) {
-    $flavorName = htmlspecialchars(trim($_POST["flavorName"]));
-    $hookahBrandId = (int)$_POST["hookahBrandId"];
-    $description = htmlspecialchars(trim($_POST["description"] ?? ""));
-    $isAvailable = isset($_POST["isAvailable"]) ? (int)$_POST["isAvailable"] : 1;
+    $Name = htmlspecialchars(trim($_POST["Name"]));
+    $Description = htmlspecialchars(trim($_POST["Description"] ?? ""));
+    $Price = htmlspecialchars(trim($_POST["Price"]));
+    $Category = htmlspecialchars(trim($_POST["Category"]));
+    $IsAvailable = isset($_POST["IsAvailable"]) ? (int)$_POST["IsAvailable"] : 1;
 
-    if ($flavorName !== "" && $hookahBrandId > 0) {
-        lisaPiip($flavorName, $hookahBrandId, $description, $isAvailable);
+    if ($Name !== "") {
+        lisaSnak($Name, $Description, $Price, $Category, $IsAvailable);
     }
 
-    header("Location: index.php?leht=adminPiibud.php");
+    header("Location: index.php?leht=adminSnakid.php");
     exit();
 }
 
-/* Получаем список брендов */
-$brands = kysiHookahBrands();
-
-/* Получаем список вкусов */
-$piibudeNimekiri = kysiPiibud($sorttulp, $otsisona, $category);
+$snakideNimekiri = kysiSnakid($sorttulp, $otsisona, $category);
 
 /* Изменение */
 if (isset($_POST["muutmine"]) && isWorker()) {
     $muudetudid = (int)$_POST["muudetudid"];
-    $isAvailable = (int)$_POST["isAvailable"];
+    $IsAvailable = (int)$_POST["IsAvailable"];
 
     if ($muudetudid > 0) {
 
-        /* Admin может менять всё */
         if (isAdmin()) {
-            $flavorName = htmlspecialchars(trim($_POST["flavorName"] ?? ""));
-            $hookahBrandId = (int)($_POST["hookahBrandId"] ?? 0);
-            $description = htmlspecialchars(trim($_POST["description"] ?? ""));
+            $Name = htmlspecialchars(trim($_POST["Name"] ?? ""));
+            $Description = htmlspecialchars(trim($_POST["Description"] ?? ""));
+            $Price = htmlspecialchars(trim($_POST["Price"] ?? 0));
+            $Category = htmlspecialchars(trim($_POST["Category"] ?? ""));
 
-            if ($flavorName !== "" && $hookahBrandId > 0) {
-                muudaPiip($muudetudid, $flavorName, $hookahBrandId, $description, $isAvailable);
+            if ($Name !== "" && $Category !== "") {
+                muudaSnak($muudetudid, $Name, $Description, $Price, $Category, $IsAvailable);
             }
         }
-
-        /* Worker может менять только статус */
         elseif ($_SESSION['role'] == 1) {
-            muudaPiibuStaatus($muudetudid, $isAvailable);
+            muudaSnakiStaatus($muudetudid, $IsAvailable);
         }
     }
 
-    header("Location: index.php?leht=adminPiibud.php&sort=" . urlencode($sorttulp) . "&otsisona=" . urlencode($otsisona) . "&category=" . urlencode($category));
+    header("Location: index.php?leht=adminSnakid.php&sort=" . urlencode($sorttulp) . "&otsisona=" . urlencode($otsisona) . "&category=" . urlencode($category));
     exit();
 }
 
 /* Удаление — только admin */
 if (isset($_GET["kustutaid"]) && isAdmin()) {
-    kustutaPiip((int)$_GET["kustutaid"]);
-    header("Location: index.php?leht=adminPiibud.php");
+    kustutaSnak((int)$_GET["kustutaid"]);
+    header("Location: index.php?leht=adminSnakid.php");
     exit();
 }
 ?>
@@ -102,9 +91,9 @@ if (isset($_GET["kustutaid"]) && isAdmin()) {
 
         <aside class="glass adminSidebar">
             <nav class="adminNav">
-                <a href="index.php?leht=adminPiibud.php" class="adminNavLink active">Piibud</a>
+                <a href="index.php?leht=adminPiibud.php" class="adminNavLink">Piibud</a>
                 <a href="index.php?leht=adminJoogid.php" class="adminNavLink">Joogid</a>
-                <a href="index.php?leht=adminSnakid.php" class="adminNavLink">Toidud</a>
+                <a href="index.php?leht=adminSnakid.php" class="adminNavLink active">Toidud</a>
                 <a href="index.php?leht=adminBroneeringud.php" class="adminNavLink">Broneeringud</a>
                 <a href="index.php?leht=adminKasutajad.php" class="adminNavLink">Kasutajad</a>
                 <a href="index.php?leht=adminGraafik.php" class="adminNavLink">Graafik</a>
@@ -117,16 +106,16 @@ if (isset($_GET["kustutaid"]) && isAdmin()) {
 
         <div class="adminContent">
             <div class="menuuHeader">
-                <h1 class="menuuTitle">PIIBUD</h1>
+                <h1 class="menuuTitle">TOIDUD</h1>
                 <div class="menuuTitleLine"></div>
             </div>
 
             <div class="dashboardInfo">
                 <p class="dashboardDiscription">
                     <?php if (isAdmin()): ?>
-                        Halda vesipiipude nimekirja, hindu ja maitseid.
+                        Halda toitude nimekirja, hindu ja staatust.
                     <?php else: ?>
-                        Muuda vesipiipude staatust.
+                        Muuda toitude staatust.
                     <?php endif; ?>
                 </p>
             </div>
@@ -134,47 +123,66 @@ if (isset($_GET["kustutaid"]) && isAdmin()) {
             <div class="adminPanelCard">
 
                 <form method="get" action="index.php" class="adminTtoolbar">
-                    <input type="hidden" name="leht" value="adminPiibud.php">
+                    <input type="hidden" name="leht" value="adminSnakid.php">
                     <input type="hidden" name="sort" value="<?= htmlspecialchars($sorttulp) ?>">
 
                     <div class="adminOtsingBox">
                         <input
-                                type="text"
-                                name="otsisona"
-                                class="adminPiibuOtsing"
-                                placeholder="Otsi piipu..."
-                                value="<?= htmlspecialchars($otsisona) ?>"
+                            type="text"
+                            name="otsisona"
+                            class="adminPiibuOtsing"
+                            placeholder="Otsi toitu..."
+                            value="<?= htmlspecialchars($otsisona) ?>"
                         >
                     </div>
 
                     <?php if (isAdmin()): ?>
-                        <button type="button" id="toggleFormBtn" class="btn">+ Lisa uus piip</button>
+                        <button type="button" id="toggleFormBtn" class="btn">+ Lisa uus toit</button>
                     <?php endif; ?>
                 </form>
 
                 <?php if (isAdmin()): ?>
                     <div id="addForm" class="glass lisaInfoVorm formCard hidden">
-                        <h2 class="formTitle dashboardItemTitle">Uue maitse lisamine</h2>
+                        <h2 class="formTitle dashboardItemTitle">Uue toidu lisamine</h2>
 
-                        <form method="post" action="index.php?leht=adminPiibud.php">
+                        <form method="post" action="index.php?leht=adminSnakid.php">
                             <div class="formGrid">
 
                                 <div class="formGroup">
                                     <input
-                                            type="text"
-                                            name="flavorName"
-                                            placeholder="Maitse nimetus"
-                                            required
+                                        type="text"
+                                        name="Name"
+                                        placeholder="Toidu nimetus"
+                                        required
+                                    >
+                                </div>
+
+                                <div class="formGroup">
+                                    <input
+                                        type="text"
+                                        name="Description"
+                                        placeholder="Kirjeldus"
+                                    >
+                                </div>
+
+                                <div class="formGroup">
+                                    <input
+                                        type="number"
+                                        step="0.01"
+                                        min="0"
+                                        name="Price"
+                                        placeholder="Hind"
+                                        required
                                     >
                                 </div>
 
                                 <div class="formGroup">
                                     <div class="customSelectWrapper">
-                                        <select name="hookahBrandId" class="customSelectNative" required>
+                                        <select name="Category" class="customSelectNative" required>
                                             <option value="">Vali kategooria</option>
                                             <?php foreach ($categories as $cat): ?>
-                                                <option value="<?= htmlspecialchars($cat['Id']) ?>">
-                                                    <?= htmlspecialchars($cat['Name']) ?>
+                                                <option value="<?= htmlspecialchars($cat['Category']) ?>">
+                                                    <?= htmlspecialchars($cat['Category']) ?>
                                                 </option>
                                             <?php endforeach; ?>
                                         </select>
@@ -187,10 +195,10 @@ if (isset($_GET["kustutaid"]) && isAdmin()) {
                                         <div class="customSelectDropdown">
                                             <?php foreach ($categories as $cat): ?>
                                                 <div
-                                                        class="customSelectOption"
-                                                        data-value="<?= htmlspecialchars($cat['Id']) ?>"
+                                                    class="customSelectOption"
+                                                    data-value="<?= htmlspecialchars($cat['Category']) ?>"
                                                 >
-                                                    <?= htmlspecialchars($cat['Name']) ?>
+                                                    <?= htmlspecialchars($cat['Category']) ?>
                                                 </div>
                                             <?php endforeach; ?>
                                         </div>
@@ -198,16 +206,8 @@ if (isset($_GET["kustutaid"]) && isAdmin()) {
                                 </div>
 
                                 <div class="formGroup">
-                                    <input
-                                            type="text"
-                                            name="description"
-                                            placeholder="Kirjeldus"
-                                    >
-                                </div>
-
-                                <div class="formGroup">
                                     <div class="customSelectWrapper">
-                                        <select name="isAvailable" class="customSelectNative">
+                                        <select name="IsAvailable" class="customSelectNative">
                                             <option value="1">Aktiivne</option>
                                             <option value="0">Peidetud</option>
                                         </select>
@@ -238,33 +238,28 @@ if (isset($_GET["kustutaid"]) && isAdmin()) {
                         <thead>
                         <tr>
                             <td>
-                                <a href="?leht=adminPiibud.php&sort=id&otsisona=<?= urlencode($otsisona) ?>&category=<?= urlencode($category) ?>">
+                                <a href="?leht=adminSnakid.php&sort=id&otsisona=<?= urlencode($otsisona) ?>&category=<?= urlencode($category) ?>">
                                     ID
                                 </a>
                             </td>
                             <td>
-                                <a href="?leht=adminPiibud.php&sort=nimetus&otsisona=<?= urlencode($otsisona) ?>&category=<?= urlencode($category) ?>">
+                                <a href="?leht=adminSnakid.php&sort=nimetus&otsisona=<?= urlencode($otsisona) ?>&category=<?= urlencode($category) ?>">
                                     Nimetus
                                 </a>
                             </td>
                             <td>
-                                <a href="?leht=adminPiibud.php&sort=kategooria&otsisona=<?= urlencode($otsisona) ?>&category=<?= urlencode($category) ?>">
+                                <a href="?leht=adminSnakid.php&sort=kategooria&otsisona=<?= urlencode($otsisona) ?>&category=<?= urlencode($category) ?>">
                                     Kategooria
                                 </a>
                             </td>
                             <td>Kirjeldus</td>
                             <td>
-                                <a href="?leht=adminPiibud.php&sort=taishind&otsisona=<?= urlencode($otsisona) ?>&category=<?= urlencode($category) ?>">
-                                    Täishind
+                                <a href="?leht=adminSnakid.php&sort=hind&otsisona=<?= urlencode($otsisona) ?>&category=<?= urlencode($category) ?>">
+                                    Hind
                                 </a>
                             </td>
                             <td>
-                                <a href="?leht=adminPiibud.php&sort=kliendihind&otsisona=<?= urlencode($otsisona) ?>&category=<?= urlencode($category) ?>">
-                                    Kliendihind
-                                </a>
-                            </td>
-                            <td>
-                                <a href="?leht=adminPiibud.php&sort=staatus&otsisona=<?= urlencode($otsisona) ?>&category=<?= urlencode($category) ?>">
+                                <a href="?leht=adminSnakid.php&sort=staatus&otsisona=<?= urlencode($otsisona) ?>&category=<?= urlencode($category) ?>">
                                     Staatus
                                 </a>
                             </td>
@@ -273,17 +268,17 @@ if (isset($_GET["kustutaid"]) && isAdmin()) {
                         </thead>
 
                         <tbody id="piibudTableBody">
-                        <?php if (!empty($piibudeNimekiri)): ?>
-                            <?php foreach ($piibudeNimekiri as $piip): ?>
+                        <?php if (!empty($snakideNimekiri)): ?>
+                            <?php foreach ($snakideNimekiri as $snak): ?>
 
-                                <?php if (isset($_GET["muutmisid"]) && intval($_GET["muutmisid"]) === intval($piip->Id) && isWorker()): ?>
+                                <?php if (isset($_GET["muutmisid"]) && intval($_GET["muutmisid"]) === intval($snak->Id) && isWorker()): ?>
                                     <tr class="editRow">
-                                        <td colspan="8">
+                                        <td colspan="7">
                                             <form method="post"
-                                                  action="index.php?leht=adminPiibud.php&sort=<?= urlencode($sorttulp) ?>&otsisona=<?= urlencode($otsisona) ?>&category=<?= urlencode($category) ?>"
+                                                  action="index.php?leht=adminSnakid.php&sort=<?= urlencode($sorttulp) ?>&otsisona=<?= urlencode($otsisona) ?>&category=<?= urlencode($category) ?>"
                                                   class="adminEditForm">
 
-                                                <input type="hidden" name="muudetudid" value="<?= htmlspecialchars($piip->Id) ?>">
+                                                <input type="hidden" name="muudetudid" value="<?= htmlspecialchars($snak->Id) ?>">
 
                                                 <div class="formGrid">
 
@@ -291,59 +286,60 @@ if (isset($_GET["kustutaid"]) && isAdmin()) {
 
                                                         <div class="formGroup">
                                                             <input
-                                                                    type="text"
-                                                                    name="flavorName"
-                                                                    value="<?= htmlspecialchars($piip->FlavorName) ?>"
-                                                                    placeholder="Maitse nimetus"
-                                                                    required
-                                                            >
-                                                        </div>
-                                                        <div class="formGroup">
-                                                            <input
-                                                                    type="text"
-                                                                    name="description"
-                                                                    value="<?= htmlspecialchars($piip->Description ?? '') ?>"
-                                                                    placeholder="Kirjeldus"
+                                                                type="text"
+                                                                name="Name"
+                                                                value="<?= htmlspecialchars($snak->Name) ?>"
+                                                                placeholder="Toidu nimetus"
+                                                                required
                                                             >
                                                         </div>
 
                                                         <div class="formGroup">
+                                                            <input
+                                                                type="text"
+                                                                name="Description"
+                                                                value="<?= htmlspecialchars($snak->Description ?? '') ?>"
+                                                                placeholder="Kirjeldus"
+                                                            >
+                                                        </div>
+
+                                                        <div class="formGroup">
+                                                            <input
+                                                                type="number"
+                                                                step="0.50"
+                                                                min="0"
+                                                                name="Price"
+                                                                value="<?= htmlspecialchars($snak->Price) ?>"
+                                                                placeholder="Hind"
+                                                                required
+                                                            >
+                                                        </div>
+                                                        <div class="formGroup">
                                                             <div class="customSelectWrapper">
-                                                                <select name="hookahBrandId" class="customSelectNative" required>
+                                                                <select name="Category" class="customSelectNative" required>
                                                                     <option value="">Vali kategooria</option>
                                                                     <?php foreach ($categories as $cat): ?>
                                                                         <option
-                                                                                value="<?= htmlspecialchars($cat['Id']) ?>"
-                                                                                <?= ((int)$piip->HookahBrandId === (int)$cat['Id']) ? 'selected' : '' ?>
+                                                                            value="<?= htmlspecialchars($cat['Category']) ?>"
+                                                                            <?= ($snak->Category === $cat['Category']) ? 'selected' : '' ?>
                                                                         >
-                                                                            <?= htmlspecialchars($cat['Name']) ?>
+                                                                            <?= htmlspecialchars($cat['Category']) ?>
                                                                         </option>
                                                                     <?php endforeach; ?>
                                                                 </select>
 
                                                                 <div class="customSelectTrigger">
-                                                                    <span class="customSelectText">
-                                                                        <?php
-                                                                        $selectedCategoryName = "Vali kategooria";
-                                                                        foreach ($categories as $cat) {
-                                                                            if ((int)$piip->HookahBrandId === (int)$cat['Id']) {
-                                                                                $selectedCategoryName = $cat['Name'];
-                                                                                break;
-                                                                            }
-                                                                        }
-                                                                        echo htmlspecialchars($selectedCategoryName);
-                                                                        ?>
-                                                                    </span>
+                                                                    <span class="customSelectText"><?= htmlspecialchars($snak->Category) ?></span>
                                                                     <span class="customSelectArrow">▾</span>
                                                                 </div>
 
                                                                 <div class="customSelectDropdown">
                                                                     <?php foreach ($categories as $cat): ?>
                                                                         <div
-                                                                                class="customSelectOption <?= ((int)$piip->HookahBrandId === (int)$cat['Id']) ? 'selected' : '' ?>"
-                                                                                data-value="<?= htmlspecialchars($cat['Id']) ?>"
+                                                                            class="customSelectOption <?= ($snak->Category === $cat['Category']) ? 'selected' : '' ?>"
+                                                                            data-value="<?= htmlspecialchars($cat['Category']) ?>"
                                                                         >
-                                                                            <?= htmlspecialchars($cat['Name']) ?>
+                                                                            <?= htmlspecialchars($cat['Category']) ?>
                                                                         </div>
                                                                     <?php endforeach; ?>
                                                                 </div>
@@ -351,30 +347,29 @@ if (isset($_GET["kustutaid"]) && isAdmin()) {
                                                         </div>
 
 
-
                                                     <?php else: ?>
 
                                                         <div class="formGroup">
                                                             <input
-                                                                    type="text"
-                                                                    value="<?= htmlspecialchars($piip->FlavorName) ?>"
-                                                                    disabled
+                                                                type="text"
+                                                                value="<?= htmlspecialchars($snak->Name) ?>"
+                                                                disabled
                                                             >
                                                         </div>
 
                                                         <div class="formGroup">
                                                             <input
-                                                                    type="text"
-                                                                    value="<?= htmlspecialchars($piip->Name) ?>"
-                                                                    disabled
+                                                                type="text"
+                                                                value="<?= htmlspecialchars($snak->Category) ?>"
+                                                                disabled
                                                             >
                                                         </div>
 
                                                         <div class="formGroup">
                                                             <input
-                                                                    type="text"
-                                                                    value="<?= htmlspecialchars($piip->Description ?? '-') ?>"
-                                                                    disabled
+                                                                type="text"
+                                                                value="<?= htmlspecialchars($snak->Description ?? '-') ?>"
+                                                                disabled
                                                             >
                                                         </div>
 
@@ -382,21 +377,21 @@ if (isset($_GET["kustutaid"]) && isAdmin()) {
 
                                                     <div class="formGroup">
                                                         <div class="customSelectWrapper">
-                                                            <select name="isAvailable" class="customSelectNative">
-                                                                <option value="1" <?= ((int)$piip->IsAvailable === 1) ? 'selected' : '' ?>>Aktiivne</option>
-                                                                <option value="0" <?= ((int)$piip->IsAvailable === 0) ? 'selected' : '' ?>>Peidetud</option>
+                                                            <select name="IsAvailable" class="customSelectNative">
+                                                                <option value="1" <?= ((int)$snak->IsAvailable === 1) ? 'selected' : '' ?>>Aktiivne</option>
+                                                                <option value="0" <?= ((int)$snak->IsAvailable === 0) ? 'selected' : '' ?>>Peidetud</option>
                                                             </select>
 
                                                             <div class="customSelectTrigger">
                                                                 <span class="customSelectText">
-                                                                    <?= ((int)$piip->IsAvailable === 1) ? 'Aktiivne' : 'Peidetud' ?>
+                                                                    <?= ((int)$snak->IsAvailable === 1) ? 'Aktiivne' : 'Peidetud' ?>
                                                                 </span>
                                                                 <span class="customSelectArrow">▾</span>
                                                             </div>
 
                                                             <div class="customSelectDropdown">
-                                                                <div class="customSelectOption <?= ((int)$piip->IsAvailable === 1) ? 'selected' : '' ?>" data-value="1">Aktiivne</div>
-                                                                <div class="customSelectOption <?= ((int)$piip->IsAvailable === 0) ? 'selected' : '' ?>" data-value="0">Peidetud</div>
+                                                                <div class="customSelectOption <?= ((int)$snak->IsAvailable === 1) ? 'selected' : '' ?>" data-value="1">Aktiivne</div>
+                                                                <div class="customSelectOption <?= ((int)$snak->IsAvailable === 0) ? 'selected' : '' ?>" data-value="0">Peidetud</div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -405,7 +400,7 @@ if (isset($_GET["kustutaid"]) && isAdmin()) {
 
                                                 <div class="formActions">
                                                     <button type="submit" name="muutmine" class="btn">Muuda</button>
-                                                    <a href="index.php?leht=adminPiibud.php&sort=<?= urlencode($sorttulp) ?>&otsisona=<?= urlencode($otsisona) ?>&category=<?= urlencode($category) ?>" class="btn katkestaBtn">
+                                                    <a href="index.php?leht=adminSnakid.php&sort=<?= urlencode($sorttulp) ?>&otsisona=<?= urlencode($otsisona) ?>&category=<?= urlencode($category) ?>" class="btn katkestaBtn">
                                                         Katkesta
                                                     </a>
                                                 </div>
@@ -414,14 +409,13 @@ if (isset($_GET["kustutaid"]) && isAdmin()) {
                                     </tr>
                                 <?php else: ?>
                                     <tr>
-                                        <td><?= htmlspecialchars($piip->Id) ?></td>
-                                        <td><?= htmlspecialchars($piip->FlavorName) ?></td>
-                                        <td><?= htmlspecialchars($piip->Name) ?></td>
-                                        <td><?= htmlspecialchars($piip->Description ?? '-') ?></td>
-                                        <td><?= htmlspecialchars($piip->RegularPrice) ?> €</td>
-                                        <td><?= htmlspecialchars($piip->ClientPrice) ?> €</td>
+                                        <td><?= htmlspecialchars($snak->Id) ?></td>
+                                        <td><?= htmlspecialchars($snak->Name) ?></td>
+                                        <td><?= htmlspecialchars($snak->Category) ?></td>
+                                        <td><?= htmlspecialchars($snak->Description ?? '-') ?></td>
+                                        <td><?= htmlspecialchars($snak->Price) ?> €</td>
                                         <td>
-                                            <?php if ((int)$piip->IsAvailable === 1): ?>
+                                            <?php if ((int)$snak->IsAvailable === 1): ?>
                                                 <span class="statusBadge activeStatus">
                                                     <span class="statusDot"></span>
                                                     Aktiivne
@@ -434,13 +428,13 @@ if (isset($_GET["kustutaid"]) && isAdmin()) {
                                             <?php endif; ?>
                                         </td>
                                         <td>
-                                            <a href="index.php?leht=adminPiibud.php&muutmisid=<?= urlencode($piip->Id) ?>&sort=<?= urlencode($sorttulp) ?>&otsisona=<?= urlencode($otsisona) ?>&category=<?= urlencode($category) ?>" class="tableActionBtn muudaBtn">
+                                            <a href="index.php?leht=adminSnakid.php&muutmisid=<?= urlencode($snak->Id) ?>&sort=<?= urlencode($sorttulp) ?>&otsisona=<?= urlencode($otsisona) ?>&category=<?= urlencode($category) ?>" class="tableActionBtn muudaBtn">
                                                 Muuda
                                             </a>
 
                                             <?php if (isAdmin()): ?>
-                                                <a href="index.php?leht=adminPiibud.php&kustutaid=<?= urlencode($piip->Id) ?>"
-                                                    onclick="return confirm('Kas kustutada see maitse?')" class="tableActionBtn kustutaBtn">
+                                                <a href="index.php?leht=adminSnakid.php&kustutaid=<?= urlencode($snak->Id) ?>"
+                                                   onclick="return confirm('Kas kustutada see toit?')" class="tableActionBtn kustutaBtn">
                                                     Kustuta
                                                 </a>
                                             <?php endif; ?>

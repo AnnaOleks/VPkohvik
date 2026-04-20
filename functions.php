@@ -440,6 +440,139 @@ function kysiJoogiKategooriad() {
 
     return $categories;
 }
+
+function kysiSnakid($sorttulp = "Nimetus", $otsisona = '', $category = ''){
+    global $yhendus;
+
+    $lubatudtulbad = [
+        "id" => "Id",
+        "nimetus" => "Name",
+        "kategooria" => "Category",
+        "hind" => "Price",
+        "staatus" => "IsAvailable"
+    ];
+
+    $sorttulp = strtolower($sorttulp);
+
+    if(!array_key_exists($sorttulp, $lubatudtulbad)){
+        $sorttulp = "nimetus";
+    }
+
+    $sortsql = $lubatudtulbad[$sorttulp];
+
+    $otsisona = addslashes(stripslashes($otsisona));
+    $category = addslashes(stripslashes($category));
+
+    $snakiTingimus = "
+        (
+            Category='Snäkid'
+        )
+    ";
+    $categoryFilter = "";
+    if (!empty($category)) {
+        $categoryFilter = " AND Category = '$category' ";
+    }
+
+    $kask = $yhendus->prepare("
+        SELECT 
+            Id,
+            Name,
+            Description,
+            Price,
+            Category,
+            IsAvailable
+        FROM MenuItems
+        WHERE
+            $snakiTingimus
+            AND (
+                Name LIKE '%$otsisona%' 
+                OR Description LIKE '%$otsisona%' 
+                OR Category LIKE '%$otsisona%' 
+                OR Price LIKE '%$otsisona%' 
+                OR IsAvailable LIKE '%$otsisona%'
+            )
+        ORDER BY $sortsql
+    ");
+
+    $kask->execute();
+    $kask->bind_result($id, $Name, $Description, $Price, $Category, $IsAvailable);
+
+    $hoidla = array();
+    while($kask->fetch()){
+        $snak = new stdClass();
+        $snak->Id = $id;
+        $snak->Name = $Name;
+        $snak->Description = $Description;
+        $snak->Price = $Price;
+        $snak->Category = $Category;
+        $snak->IsAvailable = $IsAvailable;
+        array_push($hoidla, $snak);
+    }
+    return $hoidla;
+}
+
+function lisaSnak($Name, $Description, $Price, $Category, $IsAvailable) {
+    global $yhendus;
+
+    $kask = $yhendus->prepare("
+        INSERT INTO MenuItems (Name, Description, Price, Category, IsAvailable)
+        VALUES (?, ?, ?, ?, ?)
+    ");
+    $kask->bind_param("ssdsi", $Name, $Description, $Price, $Category, $IsAvailable);
+    $kask->execute();
+}
+
+function muudaSnak($Id, $Name, $Description, $Price, $Category, $IsAvailable) {
+    global $yhendus;
+
+    $kask = $yhendus->prepare("
+        UPDATE MenuItems
+        SET Name = ?, Description = ?, Price = ?, Category = ?, IsAvailable = ?
+        WHERE Id = ?
+    ");
+    $kask->bind_param("ssdsii", $Name, $Description, $Price, $Category, $IsAvailable, $Id);
+    $kask->execute();
+}
+
+function muudaSnakiStaatus($Id, $IsAvailable) {
+    global $yhendus;
+
+    $kask = $yhendus->prepare("
+        UPDATE MenuItems
+        SET IsAvailable = ?
+        WHERE Id = ?
+    ");
+    $kask->bind_param("ii", $IsAvailable, $Id);
+    $kask->execute();
+}
+
+function kustutaSnak($Id){
+    global $yhendus;
+    $kask = $yhendus->prepare("DELETE FROM MenuItems WHERE Id=?");
+    $kask->bind_param("i", $Id);
+    $kask->execute();
+}
+
+function kysiSnakiKategooriad() {
+    global $yhendus;
+
+    $kask = $yhendus->prepare("
+        SELECT DISTINCT Category
+        FROM MenuItems
+        WHERE 
+            Category='Snäkid'
+        ORDER BY Category
+    ");
+    $kask->execute();
+    $tulemus = $kask->get_result();
+
+    $categories = [];
+    while ($rida = $tulemus->fetch_assoc()) {
+        $categories[] = $rida;
+    }
+
+    return $categories;
+}
 ?>
 
 
