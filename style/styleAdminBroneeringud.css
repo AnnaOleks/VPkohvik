@@ -1,0 +1,114 @@
+.miniStatistika {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 22px;
+    margin: 26px 0 30px 0;
+    padding: 0;
+}
+
+.statCard {
+    position: relative;
+    min-height: 150px;
+    border-radius: 26px;
+    overflow: hidden;
+
+    border: 1px solid rgba(201, 162, 77, 0.16);
+    box-shadow:
+            0 10px 30px rgba(0, 0, 0, 0.35),
+            inset 0 1px 0 rgba(255,255,255,0.05);
+    transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+}
+
+.statCard:hover {
+    border-color: rgba(229, 199, 107, 0.35);
+    box-shadow:
+            0 16px 34px rgba(0, 0, 0, 0.42),
+            0 0 24px rgba(201, 162, 77, 0.08),
+            inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+.statCardInfo {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    padding: 20px 20px 18px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.statLabel {
+    font-family: var(--font-title), sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--text);
+    margin-bottom: 8px;
+}
+
+.statValue {
+    font-family: var(--font-title), sans-serif;
+    font-size: 25px;
+    line-height: 1;
+    font-weight: 700;
+    color: var(--gold-2);
+    text-shadow: 0 0 18px rgba(201, 162, 77, 0.12);
+    margin-bottom: 10px;
+}
+
+.statSubtext {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.bronTabs {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin: 22px 0 26px 0;
+}
+
+.bronTab {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 110px;
+    height: 48px;
+    padding: 0 22px;
+    border-radius: 14px;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.72);
+    background: rgba(12, 12, 16, 0.88);
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow:
+            inset 0 1px 0 rgba(255,255,255,0.04),
+            0 6px 18px rgba(0,0,0,0.18);
+    transition: all 0.22s ease;
+}
+
+.bronTab:hover {
+    transform: translateY(-2px);
+    color: #f3f3f3;
+    border-color: rgba(201, 162, 77, 0.35);
+    box-shadow:
+            0 10px 22px rgba(0,0,0,0.24),
+            0 0 18px rgba(201, 162, 77, 0.08);
+}
+
+.bronTab.active {
+    color: var(--gold-2);
+    border-color: rgba(201, 162, 77, 0.65);
+    background:
+            linear-gradient(180deg, rgba(201, 162, 77, 0.14), rgba(201, 162, 77, 0.05)),
+            rgba(12, 12, 16, 0.95);
+    box-shadow:
+            inset 0 1px 0 rgba(255,255,255,0.06),
+            0 10px 24px rgba(0,0,0,0.26),
+            0 0 20px rgba(201, 162, 77, 0.12);
+}

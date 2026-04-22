@@ -270,18 +270,7 @@ function kustutaPiip($Id){
     $kask->execute();
 }
 
-function lisaBron($Name, $Date, $Time, $PeopleCount, $Contact) {
-    global $yhendus;
 
-    $stmt = $yhendus->prepare("
-        INSERT INTO Reservations (Name, Date, Time, PeopleCount, Contact)
-        VALUES (?, ?, ?, ?, ?)
-    ");
-
-    $stmt->bind_param("sssis", $Name, $Date, $Time, $PeopleCount, $Contact);
-    $stmt->execute();
-    $stmt->close();
-}
 
 function lisaKlient($UserName, $Email, $Password) {
     global $yhendus;
@@ -572,6 +561,244 @@ function kysiSnakiKategooriad() {
     }
 
     return $categories;
+}
+
+function kysiBron($sorttulp = "nimi", $otsisona = '', $vaade = 'koik'){
+    global $yhendus;
+
+    $lubatudtulbad = [
+        "id" => "Id",
+        "nimi" => "Name",
+        "kuupaev" => "Date",
+        "kell" => "Time",
+        "inimestearv" => "PeopleCount",
+        "kontakt" => "Contact"
+    ];
+
+    $sorttulp = strtolower($sorttulp);
+
+    if(!array_key_exists($sorttulp, $lubatudtulbad)){
+        $sorttulp = "nimi";
+    }
+
+    $sortsql = $lubatudtulbad[$sorttulp];
+
+    $lubatudVaated = ["tana", "homme", "tulevased", "koik"];
+    $vaade = strtolower($vaade);
+
+    if (!in_array($vaade, $lubatudVaated, true)) {
+        $vaade = "koik";
+    }
+
+    $otsisona = "%" . trim($otsisona) . "%";
+
+    $lisatingimus = "";
+
+    if ($vaade == "tana") {
+        $lisatingimus = " AND Date = CURDATE() ";
+    }
+    elseif ($vaade == "homme") {
+        $lisatingimus = " AND Date = DATE_ADD(CURDATE(), INTERVAL 1 DAY) ";
+    }
+    elseif ($vaade == "tulevased") {
+        $lisatingimus = " AND Date >= CURDATE() ";
+    }
+
+    $kask = $yhendus->prepare("
+        SELECT 
+            Id,
+            Name,
+            Date,
+            Time,
+            PeopleCount,
+            Contact
+        FROM Reservations
+        WHERE
+            (
+                Name LIKE ?
+                OR Date LIKE ?
+                OR Time LIKE ?
+                OR Contact LIKE ?
+                OR CAST(PeopleCount AS CHAR) LIKE ?
+            )
+            $lisatingimus
+        ORDER BY $sortsql
+    ");
+    $kask->bind_param("sssss", $otsisona, $otsisona, $otsisona, $otsisona, $otsisona);
+
+    $kask->execute();
+    $kask->bind_result($id, $Name, $Date, $Time, $PeopleCount, $Contact);
+
+    $hoidla = array();
+    while($kask->fetch()){
+        $bron = new stdClass();
+        $bron->Id = $id;
+        $bron->Name = $Name;
+        $bron->Date = $Date;
+        $bron->Time = $Time;
+        $bron->PeopleCount = $PeopleCount;
+        $bron->Contact = $Contact;
+        array_push($hoidla, $bron);
+    }
+    $kask->close();
+    return $hoidla;
+}
+
+function lisaBron($Name, $Date, $Time, $PeopleCount, $Contact) {
+    global $yhendus;
+
+    $stmt = $yhendus->prepare("
+        INSERT INTO Reservations (Name, Date, Time, PeopleCount, Contact)
+        VALUES (?, ?, ?, ?, ?)
+    ");
+
+    $stmt->bind_param("sssis", $Name, $Date, $Time, $PeopleCount, $Contact);
+    $stmt->execute();
+    $stmt->close();
+}
+
+function muudaBron($Id, $Name, $Date, $Time, $PeopleCount, $Contact) {
+    global $yhendus;
+
+    $stmt = $yhendus->prepare("
+        UPDATE Reservations
+        SET Name = ?, Date = ?, Time = ?, PeopleCount = ?, Contact = ?
+        WHERE Id = ?
+    ");
+
+    $stmt->bind_param("sssisi", $Name, $Date, $Time, $PeopleCount, $Contact, $Id);
+    $stmt->execute();
+    $stmt->close();
+}
+
+function kustutaBron($Id){
+    global $yhendus;
+
+    $kask = $yhendus->prepare("
+        DELETE FROM Reservations
+        WHERE Id = ?
+    ");
+    $kask->bind_param("i", $Id);
+    $kask->execute();
+    $kask->close();
+}
+
+function getBronCountByDate($date) {
+    global $yhendus;
+
+    $count = 0;
+
+    $paring = $yhendus->prepare("
+        SELECT COUNT(*) 
+        FROM Reservations
+        WHERE Date = ?
+    ");
+
+    $paring->bind_param("s", $date);
+    $paring->execute();
+    $paring->bind_result($count);
+    $paring->fetch();
+    $paring->close();
+
+    return $count;
+}
+
+function getGuestsCountByDate($date) {
+    global $yhendus;
+
+    $guests = 0;
+
+    $paring = $yhendus->prepare("
+        SELECT COALESCE(SUM(PeopleCount), 0)
+        FROM Reservations
+        WHERE Date = ?
+    ");
+
+    $paring->bind_param("s", $date);
+    $paring->execute();
+    $paring->bind_result($guests);
+    $paring->fetch();
+    $paring->close();
+
+    return $guests;
+}
+
+function getNextReservationTime($date) {
+    global $yhendus;
+
+    $nextTime = "-";
+
+    $paring = $yhendus->prepare("
+        SELECT Time
+        FROM Reservations
+        WHERE Date = ?
+          AND Time >= CURTIME()
+        ORDER BY Time ASC
+        LIMIT 1
+    ");
+
+    $paring->bind_param("s", $date);
+    $paring->execute();
+    $paring->bind_result($timeFromDb);
+
+    if ($paring->fetch()) {
+        $nextTime = substr($timeFromDb, 0, 5);
+    }
+
+    $paring->close();
+
+    return $nextTime;
+}
+
+function getBronStats() {
+    $today = date("Y-m-d");
+    $tomorrow = date("Y-m-d", strtotime("+1 day"));
+
+    return [
+        "todayCount" => getBronCountByDate($today),
+        "tomorrowCount" => getBronCountByDate($tomorrow),
+        "todayGuests" => getGuestsCountByDate($today),
+        "nextTime" => getNextReservationTime($today),
+        "futureCount" => getFutureBronCount(),
+        "allCount" => getAllBronCount()
+    ];
+}
+
+function getFutureBronCount() {
+    global $yhendus;
+
+    $count = 0;
+
+    $paring = $yhendus->prepare("
+        SELECT COUNT(*)
+        FROM Reservations
+        WHERE Date >= CURDATE()
+    ");
+
+    $paring->execute();
+    $paring->bind_result($count);
+    $paring->fetch();
+    $paring->close();
+
+    return $count;
+}
+
+function getAllBronCount() {
+    global $yhendus;
+
+    $count = 0;
+
+    $paring = $yhendus->prepare("
+        SELECT COUNT(*)
+        FROM Reservations
+    ");
+
+    $paring->execute();
+    $paring->bind_result($count);
+    $paring->fetch();
+    $paring->close();
+
+    return $count;
 }
 ?>
 

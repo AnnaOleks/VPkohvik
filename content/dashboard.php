@@ -34,7 +34,7 @@ if (isAdmin()) {
             [
                     "title" => "Broneeringud",
                     "description" => "Vaata, muuda või kustuta klientide broneeringuid.",
-                    "link" => "?leht=admin_bron.php",
+                    "link" => "?leht=adminBroneeringud.php",
                     "icon" => "📅"
             ],
             [
@@ -73,7 +73,7 @@ if (isAdmin()) {
             [
                     "title" => "Broneeringud",
                     "description" => "Vaata, muuda või kustuta klientide broneeringuid.",
-                    "link" => "?leht=admin_bron.php",
+                    "link" => "?leht=adminBroneeringud.php",
                     "icon" => "📅"
             ],
             [
