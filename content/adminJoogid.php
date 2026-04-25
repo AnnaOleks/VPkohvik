@@ -90,18 +90,24 @@ if (isset($_GET["kustutaid"]) && isAdmin()) {
     <div class="adminLayout">
 
         <aside class="glass adminSidebar">
-            <nav class="adminNav">
-                <a href="index.php?leht=adminPiibud.php" class="adminNavLink">Piibud</a>
-                <a href="index.php?leht=adminJoogid.php" class="adminNavLink active">Joogid</a>
-                <a href="index.php?leht=adminSnakid.php" class="adminNavLink">Toidud</a>
-                <a href="index.php?leht=adminBroneeringud.php" class="adminNavLink">Broneeringud</a>
-                <a href="index.php?leht=adminKasutajad.php" class="adminNavLink">Kasutajad</a>
-                <a href="index.php?leht=adminGraafik.php" class="adminNavLink">Graafik</a>
-            </nav>
-
-            <div class="adminSidebarBottom">
-                <a href="?leht=logout.php" class="adminLogout">Logout</a>
-            </div>
+            <?php if (isAdmin()): ?>
+                <nav class="adminNav">
+                    <a href="index.php?leht=adminPiibud.php" class="adminNavLink">Piibud</a>
+                    <a href="index.php?leht=adminJoogid.php" class="adminNavLink active">Joogid</a>
+                    <a href="index.php?leht=adminSnakid.php" class="adminNavLink">Toidud</a>
+                    <a href="index.php?leht=adminBroneeringud.php" class="adminNavLink">Broneeringud</a>
+                    <a href="index.php?leht=adminUsers.php" class="adminNavLink">Kasutajad</a>
+                    <a href="index.php?leht=adminGraafik.php" class="adminNavLink">Graafik</a>
+                </nav>
+            <?php else: ?>
+                <nav class="adminNav">
+                    <a href="index.php?leht=adminPiibud.php" class="adminNavLink">Piibud</a>
+                    <a href="index.php?leht=adminJoogid.php" class="adminNavLink active">Joogid</a>
+                    <a href="index.php?leht=adminSnakid.php" class="adminNavLink">Toidud</a>
+                    <a href="index.php?leht=adminBroneeringud.php" class="adminNavLink">Broneeringud</a>
+                    <a href="index.php?leht=adminGraafik.php" class="adminNavLink">Graafik</a>
+                </nav>
+            <?php endif; ?>
         </aside>
 
         <div class="adminContent">

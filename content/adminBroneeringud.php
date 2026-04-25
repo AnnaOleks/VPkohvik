@@ -45,7 +45,7 @@ if (isset($_GET["vaade"])) {
 }
 
 /* Добавление новой записи — только admin */
-if (isset($_POST["lisa"]) && isAdmin()) {
+if (isset($_POST["lisa"]) && isWorker()) {
     $kliendiNimi = htmlspecialchars(trim($_POST["kliendiNimi"] ?? ""));
     $kontakt = htmlspecialchars(trim($_POST["kontakt"] ?? ""));
     $kuupaev = trim($_POST["kuupaev"] ?? "");
@@ -98,15 +98,24 @@ if (isset($_GET["kustutaid"]) && isAdmin()) {
     <div class="adminLayout">
 
         <aside class="glass adminSidebar">
-            <nav class="adminNav">
-                <a href="index.php?leht=adminPiibud.php" class="adminNavLink">Piibud</a>
-                <a href="index.php?leht=adminJoogid.php" class="adminNavLink">Joogid</a>
-                <a href="index.php?leht=adminSnakid.php" class="adminNavLink">Toidud</a>
-                <a href="index.php?leht=adminBroneeringud.php" class="adminNavLink active">Broneeringud</a>
-                <a href="index.php?leht=adminKasutajad.php" class="adminNavLink">Kasutajad</a>
-                <a href="index.php?leht=adminGraafik.php" class="adminNavLink">Graafik</a>
-            </nav>
-
+            <?php if (isAdmin()): ?>
+                <nav class="adminNav">
+                    <a href="index.php?leht=adminPiibud.php" class="adminNavLink">Piibud</a>
+                    <a href="index.php?leht=adminJoogid.php" class="adminNavLink">Joogid</a>
+                    <a href="index.php?leht=adminSnakid.php" class="adminNavLink">Toidud</a>
+                    <a href="index.php?leht=adminBroneeringud.php" class="adminNavLink active">Broneeringud</a>
+                    <a href="index.php?leht=adminUsers.php" class="adminNavLink">Kasutajad</a>
+                    <a href="index.php?leht=adminGraafik.php" class="adminNavLink">Graafik</a>
+                </nav>
+            <?php else: ?>
+                <nav class="adminNav">
+                    <a href="index.php?leht=adminPiibud.php" class="adminNavLink">Piibud</a>
+                    <a href="index.php?leht=adminJoogid.php" class="adminNavLink">Joogid</a>
+                    <a href="index.php?leht=adminSnakid.php" class="adminNavLink">Toidud</a>
+                    <a href="index.php?leht=adminBroneeringud.php" class="adminNavLink active">Broneeringud</a>
+                    <a href="index.php?leht=adminGraafik.php" class="adminNavLink">Graafik</a>
+                </nav>
+            <?php endif; ?>
             <div class="adminSidebarBottom">
                 <a href="?leht=logout.php" class="adminLogout">Logout</a>
             </div>
@@ -200,12 +209,12 @@ if (isset($_GET["kustutaid"]) && isAdmin()) {
                         >
                     </div>
 
-                    <?php if (isAdmin()): ?>
+                    <?php if (isWorker()): ?>
                         <button type="button" id="toggleFormBtn" class="btn">+ Lisa uus broneering</button>
                     <?php endif; ?>
                 </form>
 
-                <?php if (isAdmin()): ?>
+                <?php if (isWorker()): ?>
                     <div id="addForm" class="glass lisaInfoVorm formCard hidden">
                         <h2 class="formTitle dashboardItemTitle">Uue broneeringu lisamine</h2>
 

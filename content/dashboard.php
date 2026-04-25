@@ -40,7 +40,7 @@ if (isAdmin()) {
             [
                     "title" => "Kasutajad",
                     "description" => "Halda kasutajate andmeid ja rolle.",
-                    "link" => "?leht=admin_users.php",
+                    "link" => "?leht=adminUsers.php",
                     "icon" => "👤"
             ],
             [

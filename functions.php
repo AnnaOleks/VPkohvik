@@ -800,6 +800,96 @@ function getAllBronCount() {
 
     return $count;
 }
+
+function kysiUser($sorttulp="kasutajanimi", $otsisona='')
+{
+    global $yhendus;
+    $lubatudtulbad = [
+        "id" => "Id",
+        "kasutajanimi" => "UserName",
+        "epost" => "Email",
+        "roll" => "Role"
+    ];
+    $sorttulp = strtolower($sorttulp);
+
+    if (!array_key_exists($sorttulp, $lubatudtulbad)) {
+        $sorttulp = "kasutajanimi";
+    }
+
+    $sortsql = $lubatudtulbad[$sorttulp];
+    $otsisona = addslashes(stripslashes($otsisona));
+
+    if (isAdmin()) {
+        $kask = $yhendus->prepare("
+            SELECT Id, UserName, Email, Role
+            FROM Users
+            WHERE (
+                UserName LIKE '%$otsisona%'
+                OR Email LIKE '%$otsisona%'
+                OR CAST(Role AS CHAR) LIKE '%$otsisona%'
+            )
+            ORDER BY $sortsql
+        ");
+
+        $kask->execute();
+        $kask->bind_result($id, $UserName, $Email, $Role);
+
+        $hoidla = array();
+
+        while ($kask->fetch()) {
+            $user = new stdClass();
+            $user->Id = $id;
+            $user->Kasutajanimi = $UserName;
+            $user->Epost = $Email;
+            $user->Roll = $Role;
+            array_push($hoidla, $user);
+        }
+
+        $kask->close();
+        return $hoidla;
+    }
+
+    return [];
+}
+
+function lisaUser($UserName, $Email, $Password, $Role) {
+    global $yhendus;
+
+    $hashedPassword = hashAspNetIdentityPassword($Password);
+
+    $kask = $yhendus->prepare("
+        INSERT INTO Users (UserName, Email, Password, Role)
+        VALUES (?, ?, ?, ?)
+    ");
+    $kask->bind_param("sssi", $UserName, $Email, $hashedPassword, $Role);
+    $kask->execute();
+    $kask->close();
+}
+
+function muudaUser($Id, $UserName, $Email, $Role) {
+    global $yhendus;
+
+    $kask = $yhendus->prepare("
+        UPDATE Users
+        SET UserName = ?, Email = ?, Role = ?
+        WHERE Id = ?
+    ");
+    $kask->bind_param("ssii", $UserName, $Email, $Role, $Id);
+    $kask->execute();
+    $kask->close();
+}
+
+function kustutaUser($Id){
+    global $yhendus;
+
+    $kask = $yhendus->prepare("
+        DELETE FROM Users
+        WHERE Id = ?
+    ");
+    $kask->bind_param("i", $Id);
+    $kask->execute();
+    $kask->close();
+}
 ?>
 
 
