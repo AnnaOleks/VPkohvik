@@ -890,6 +890,115 @@ function kustutaUser($Id){
     $kask->execute();
     $kask->close();
 }
+
+function kysiTootajad() {
+    global $yhendus;
+
+    $kask = $yhendus->prepare("
+        SELECT UserName
+        FROM Users
+        WHERE Role >= 1
+        ORDER BY UserName
+    ");
+
+    $kask->execute();
+
+    $result = $kask->get_result();
+
+    return $result->fetch_all(MYSQLI_ASSOC);
+}
+
+function kysiGraafikKuu($kuu, $tootaja = "") {
+    global $yhendus;
+
+    $algus = $kuu . "-01";
+    $lopp = date("Y-m-t", strtotime($algus));
+
+    if ($tootaja != "") {
+        $kask = $yhendus->prepare("
+            SELECT Id, UserName, Date, StartTime, EndTime
+            FROM WorkShifts
+            WHERE Date BETWEEN ? AND ?
+            AND UserName = ?
+            ORDER BY Date, StartTime
+        ");
+
+        $kask->bind_param("sss", $algus, $lopp, $tootaja);
+    } else {
+        $kask = $yhendus->prepare("
+            SELECT Id, UserName, Date, StartTime, EndTime
+            FROM WorkShifts
+            WHERE Date BETWEEN ? AND ?
+            ORDER BY Date, StartTime
+        ");
+
+        $kask->bind_param("ss", $algus, $lopp);
+    }
+
+    $kask->execute();
+
+    $result = $kask->get_result();
+
+    return $result->fetch_all(MYSQLI_ASSOC);
+}
+
+function kysiGraafikYks($id) {
+    global $yhendus;
+
+    $kask = $yhendus->prepare("
+        SELECT Id, UserName, Date, StartTime, EndTime
+        FROM WorkShifts
+        WHERE Id = ?
+    ");
+
+    $kask->bind_param("i", $id);
+
+    $kask->execute();
+
+    $result = $kask->get_result();
+
+    return $result->fetch_assoc();
+}
+
+function lisaGraafik($userName, $date, $startTime, $endTime) {
+    global $yhendus;
+
+    $kask = $yhendus->prepare("
+        INSERT INTO WorkShifts (UserName, Date, StartTime, EndTime)
+        VALUES (?, ?, ?, ?)
+    ");
+
+    $kask->bind_param("ssss", $userName, $date, $startTime, $endTime);
+
+    $kask->execute();
+}
+
+function muudaGraafik($id, $userName, $date, $startTime, $endTime) {
+    global $yhendus;
+
+    $kask = $yhendus->prepare("
+        UPDATE WorkShifts
+        SET UserName = ?, Date = ?, StartTime = ?, EndTime = ?
+        WHERE Id = ?
+    ");
+
+    $kask->bind_param("ssssi", $userName, $date, $startTime, $endTime, $id);
+
+    $kask->execute();
+}
+
+function kustutaGraafik($id) {
+    global $yhendus;
+
+    $kask = $yhendus->prepare("
+        DELETE FROM WorkShifts
+        WHERE Id = ?
+    ");
+
+    $kask->bind_param("i", $id);
+
+    $kask->execute();
+}
 ?>
 
 

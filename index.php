@@ -26,6 +26,7 @@ require_once('functions.php');
     <link rel="stylesheet" href="style/styleAdminPiibud.css">
     <link rel="stylesheet" href="style/styleAdminJoogid.css">
     <link rel="stylesheet" href="style/styleAdminBroneeringud.css">
+    <link rel="stylesheet" href="style/styleAdminGraafik.css">
 </head>
 
 <body>
