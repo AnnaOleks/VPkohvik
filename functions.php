@@ -290,6 +290,66 @@ function lisaKlient($UserName, $Email, $Password) {
     $stmt->close();
 }
 
+function kysiJoogidMenuu() {
+    global $yhendus;
+
+    $kask = $yhendus->prepare("
+        SELECT 
+            Id,
+            Name,
+            Description,
+            Price,
+            Category
+        FROM MenuItems
+        WHERE IsAvailable = 1
+        AND (
+            Category = 'Kuumad joogid'
+            OR Category = 'Karastusjoogid'
+            OR Category = 'Alkohol'
+            OR Category = 'Kokteilid'
+        )
+        ORDER BY Category ASC, Name ASC
+    ");
+
+    $kask->execute();
+    $tulemus = $kask->get_result();
+
+    $joogid = [];
+
+    while ($rida = $tulemus->fetch_assoc()) {
+        $category = $rida["Category"];
+
+        if (!isset($joogid[$category])) {
+            $kirjeldus = "";
+
+            if ($category == "Kokteilid") {
+                $kirjeldus = "Maitseküllased kokteilid erinevatele eelistustele.";
+            } elseif ($category == "Alkohol") {
+                $kirjeldus = "Valik erinevaid alkohoolseid jooke.";
+            } elseif ($category == "Karastusjoogid") {
+                $kirjeldus = "Karastavad joogid janu kustutamiseks.";
+            } elseif ($category == "Kuumad joogid") {
+                $kirjeldus = "Soojad joogid rahulikuks nautimiseks.";
+            }
+
+            $joogid[$category] = [
+                "name" => $category,
+                "description" => $kirjeldus,
+                "items" => []
+            ];
+        }
+
+        $joogid[$category]["items"][] = [
+            "id" => $rida["Id"],
+            "name" => $rida["Name"],
+            "description" => $rida["Description"],
+            "price" => $rida["Price"]
+        ];
+    }
+
+    return array_values($joogid);
+}
+
 function kysiJoogid($sorttulp = "Nimetus", $otsisona = '', $category = ''){
     global $yhendus;
 
