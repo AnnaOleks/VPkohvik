@@ -95,10 +95,11 @@ function kysiPiibudMenuu() {
             b.Name AS brandName,
             b.RegularPrice,
             b.ClientPrice,
+            b.Description AS brandDescription,
 
             f.Id AS flavorId,
             f.FlavorName,
-            f.Description,
+            f.Description AS flavorDescription,
             f.IsAvailable
 
         FROM HookahBrands b
@@ -121,7 +122,7 @@ function kysiPiibudMenuu() {
             $piibud[$brandId] = [
                 "id" => $brandId,
                 "name" => $rida["brandName"],
-                "description" => "", // у тебя его нет в базе
+                "description" => $rida["brandDescription"],
                 "full_price" => $rida["RegularPrice"],
                 "client_price" => $rida["ClientPrice"],
                 "flavors" => []
@@ -133,7 +134,7 @@ function kysiPiibudMenuu() {
             $piibud[$brandId]["flavors"][] = [
                 "id" => $rida["flavorId"],
                 "name" => $rida["FlavorName"],
-                "description" => $rida["Description"] ?? ""
+                "description" => $rida["flavorDescription"] ?? ""
             ];
         }
     }

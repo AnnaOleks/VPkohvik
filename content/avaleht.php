@@ -62,8 +62,8 @@ if (isset($_POST["btnBroneeri"])) {
             </div>
             <p class="avalehtSlogan">Suits. Rahu. Aeg iseendale</p>
             <div class="avalehtActions">
-                <input type="submit" name="btnBroneeri" value="BRONEERI" class="btn">
-                <a href="?leht=piibud.php" class="btn-link">
+                <input type="submit" name="btnBroneeri" value="PAKKUMISED" class="btn">
+                <a href="?leht=pakkumised.php" class="btn-link">
                     <span>AVA MENÜÜ</span>
                     <span>›</span>
                 </a>
