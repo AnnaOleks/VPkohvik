@@ -1,49 +1,9 @@
 <?php
-$frituur = [
-        [
-                "id" => 1,
-                "name" => "Fritüür",
-                "description" => "Krõbedad ja maitsvad snäkid, mis sobivad ideaalselt jagamiseks.",
-                "items" => [
-                        [
-                                "id" => 101,
-                                "name" => "Friikartulid",
-                                "description" => "Kuldsed ja krõbedad friikartulid.",
-                                "price" => 4
-                        ],
-                        [
-                                "id" => 102,
-                                "name" => "Juustupulgad",
-                                "description" => "Paneeritud pulgad sulava juustuga.",
-                                "price" => 5
-                        ],
-                        [
-                                "id" => 103,
-                                "name" => "Kana nuggetsid",
-                                "description" => "Krõbedad kanatükid klassikalises paneeringus.",
-                                "price" => 6
-                        ],
-                        [
-                                "id" => 104,
-                                "name" => "Sibularõngad",
-                                "description" => "Mahlased sibularõngad krõbeda kattega.",
-                                "price" => 5
-                        ],
-                        [
-                                "id" => 105,
-                                "name" => "Kana tiivad",
-                                "description" => "Vürtsikad ja mahlased kanatiivad.",
-                                "price" => 7
-                        ],
-                        [
-                                "id" => 106,
-                                "name" => "Jalapeno poppers",
-                                "description" => "Kergelt vürtsikad paprikad juustutäidisega.",
-                                "price" => 6
-                        ]
-                ]
-        ]
-];
+include('config.php');
+session_start();
+require_once("functions.php");
+
+$snakid = kysiSnakidMenuu();
 ?>
 
 <section class="categoryPage snakiPage">
@@ -56,29 +16,37 @@ $frituur = [
         <?php include("menuuTabs.php"); ?>
 
         <div class="glass categoryList">
-            <?php foreach($frituur as $fri): ?>
+            <?php foreach($snakid as $snakk): ?>
                 <div class="categoryCard">
                     <div class="piibuCardTop">
                         <div class="piibuInfo">
-                            <h3 class="piibuName"><?= htmlspecialchars($fri["name"]) ?></h3>
-                            <p class="piibuDescription"><?= htmlspecialchars($fri["description"]) ?></p>
+                            <h3 class="piibuName"><?= htmlspecialchars($snakk["name"]) ?></h3>
+
+                            <p class="piibuDescription">
+                                <?= htmlspecialchars($snakk["description"]) ?>
+                            </p>
                         </div>
                     </div>
 
                     <details class="maitsedBox">
-                        <summary class="btn-link maitsedToggle">Vaata valikut</summary>
+                        <summary class="btn-link maitsedToggle">Vaata sööke</summary>
 
                         <div class="maitsedList">
-                            <?php foreach ($fri["items"] as $item): ?>
+                            <?php foreach ($snakk["items"] as $item): ?>
                                 <div class="maitseItem">
-                                    <div class="piibuPriceRow">
-                                        <h4 class="piibuName maitseTitle"><?= htmlspecialchars($item["name"]) ?></h4>
-                                        <p class="maitseDesc"><?= htmlspecialchars($item["description"]) ?></p>
+                                    <h4 class="piibuName maitseTitle">
+                                        <?= htmlspecialchars($item["name"]) ?>
+                                    </h4>
 
-                                    </div>
+                                    <p class="maitseDesc">
+                                        <?= htmlspecialchars($item["description"]) ?>
+                                    </p>
+
                                     <div class="piibuPriceRow">
                                         <span class="piibuPriceLabel">Hind -</span>
-                                        <span class="piibuPriceValue"><?= htmlspecialchars($item["price"]) ?> €</span>
+                                        <span class="piibuPriceValue">
+                                            <?= htmlspecialchars(number_format($item["price"], 2)) ?> €
+                                        </span>
                                     </div>
                                 </div>
                             <?php endforeach; ?>

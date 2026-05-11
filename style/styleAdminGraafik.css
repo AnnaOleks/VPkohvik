@@ -1,16 +1,47 @@
-/* ===== GRAAFIK PAGE ===== */
+/* ===== GRAAFIK PAGE ADDITIONS ===== */
+
+.adminPiibudPage .graafikKuu {
+    width: 100%;
+    height: 44px;
+    padding: 0 16px;
+}
+
+.adminPiibudPage .lisaInfoVorm {
+    position: relative;
+    z-index: 500;
+    overflow: visible;
+}
+
+.adminPiibudPage .graafikFormGrid,
+.adminPiibudPage .lisaInfoVorm .formGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px 24px;
+    align-items: start;
+}
+
+.adminPiibudPage .lisaInfoVorm .formGroup {
+    min-width: 0;
+    position: relative;
+}
+
+.adminPiibudPage .lisaInfoVorm input,
+.adminPiibudPage .lisaInfoVorm .customSelectWrapper,
+.adminPiibudPage .lisaInfoVorm .customSelectTrigger {
+    width: 100%;
+}
+
+.adminPiibudPage .lisaInfoVorm .customSelectWrapper.open {
+    z-index: 10000;
+}
+
+/* ===== CALENDAR ===== */
 
 .graafikCalendarBox {
     width: 100%;
     margin-top: 34px;
     overflow-x: auto;
-    border-radius: 18px;
-    border: 1px solid rgba(255,255,255,0.08);
-    background: rgba(10,10,12,0.50);
-    backdrop-filter: blur(12px);
-    box-shadow:
-            inset 0 1px 0 rgba(255,255,255,0.04),
-            0 10px 30px rgba(0,0,0,0.18);
+    overflow-y: visible;
 }
 
 .graafikCalendar {
@@ -35,8 +66,8 @@
 }
 
 .calendarDay {
-    height: 100px;
-    padding: 12px;
+    height: 125px;
+    padding: 14px;
     vertical-align: top;
     text-align: left;
     border-right: 1px solid rgba(255,255,255,0.06);
@@ -53,7 +84,7 @@
 }
 
 .dayNumber {
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     font-family: var(--font-title), sans-serif;
     font-size: 18px;
     color: rgba(243,243,243,0.92);
@@ -65,62 +96,50 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 4px;
-
     margin-bottom: 8px;
     padding: 10px 11px;
-
     border-radius: 12px;
     border: 1px solid rgba(201,162,77,0.30);
     background:
             linear-gradient(180deg, rgba(201,162,77,0.13), rgba(201,162,77,0.04)),
             rgba(12,12,16,0.92);
-
-    box-shadow:
-            inset 0 1px 0 rgba(255,255,255,0.04),
-            0 6px 18px rgba(0,0,0,0.18);
 }
 
 .shiftItem strong {
-    display: block;
-    font-family: var(--font-text), sans-serif;
     font-size: 13px;
-    line-height: 1.2;
     color: var(--text);
-    letter-spacing: 0.2px;
 }
 
 .shiftItem span {
-    display: block;
-    font-family: var(--font-text), sans-serif;
     font-size: 13px;
-    line-height: 1.3;
     color: var(--gold-2);
-    letter-spacing: 0.2px;
 }
 
 .shiftActions {
     display: flex;
-    align-items: center;
     gap: 8px;
     margin-top: 6px;
     flex-wrap: wrap;
 }
 
 .shiftEdit,
-.shiftDelete {
+.shiftDelete,
+.addShiftSmall {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-
-    min-height: 28px;
-    padding: 0 10px;
-    border-radius: 8px;
-
+    text-decoration: none;
     font-family: var(--font-text), sans-serif;
     font-size: 12px;
     line-height: 1;
-    text-decoration: none;
     transition: 0.2s ease;
+}
+
+.shiftEdit,
+.shiftDelete {
+    min-height: 28px;
+    padding: 0 10px;
+    border-radius: 8px;
 }
 
 .shiftEdit {
@@ -129,85 +148,41 @@
     background: rgba(255,255,255,0.04);
 }
 
-.shiftEdit:hover {
-    border-color: rgba(229,199,107,0.7);
-    background: rgba(201,162,77,0.08);
-}
-
 .shiftDelete {
     color: #ff8e9a;
     border: 1px solid rgba(255,107,129,0.22);
     background: rgba(255,70,70,0.06);
 }
 
-.shiftDelete:hover {
-    border-color: rgba(255,107,129,0.58);
-    background: rgba(255,70,70,0.12);
-    color: #ffb0b8;
-}
-
 .addShiftSmall {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
     margin-top: 6px;
-    min-height: 28px;
-    padding: 0 10px;
-
+    min-height: 32px;
+    padding: 0 12px;
     border-radius: 8px;
     border: 1px solid rgba(201,162,77,0.18);
     background: rgba(255,255,255,0.025);
-
     color: rgba(229,199,107,0.85);
-    font-family: var(--font-text), sans-serif;
-    font-size: 12px;
-    line-height: 1;
-    text-decoration: none;
-    transition: 0.2s ease;
 }
 
-.addShiftSmall:hover {
-    color: var(--gold-2);
-    border-color: rgba(229,199,107,0.45);
-    background: rgba(201,162,77,0.08);
+@media (max-width: 1100px) {
+    .adminPiibudPage .adminTtoolbar {
+        grid-template-columns: 1fr 1fr;
+    }
 }
 
-/* Поле выбора месяца */
-input[type="month"].adminPiibuOtsing {
-    width: 100%;
-    height: 44px;
-    padding: 0 10px;
-    border-radius: var(--r-md);
-    border: 1px solid rgba(255,255,255,.12);
-    background: rgba(10, 10, 11, 0.96);
-    color: var(--text-secondary);
-    font-size: 13px;
-    font-family: var(--font-text), sans-serif;
-    outline: none;
-    color-scheme: dark;
-}
+@media (max-width: 700px) {
+    .adminPiibudPage .adminTtoolbar,
+    .adminPiibudPage .graafikFormGrid,
+    .adminPiibudPage .lisaInfoVorm .formGrid {
+        grid-template-columns: 1fr;
+    }
 
-input[type="month"].adminPiibuOtsing:focus {
-    border-color: var(--gold-1);
-    box-shadow: 0 0 0 2px rgba(201,162,77,.1);
-}
+    .graafikCalendar {
+        min-width: 900px;
+    }
 
-/* Обычный select, если пока без customSelect */
-select.adminPiibuOtsing {
-    width: 100%;
-    height: 44px;
-    padding: 0 10px;
-    border-radius: var(--r-md);
-    border: 1px solid rgba(255,255,255,.12);
-    background: rgba(10, 10, 11, 0.96);
-    color: var(--text-secondary);
-    font-size: 13px;
-    font-family: var(--font-text), sans-serif;
-    outline: none;
-}
-
-select.adminPiibuOtsing:focus {
-    border-color: var(--gold-1);
-    box-shadow: 0 0 0 2px rgba(201,162,77,.1);
+    .calendarDay {
+        height: 110px;
+        padding: 10px;
+    }
 }

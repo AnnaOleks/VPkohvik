@@ -162,11 +162,24 @@ if (isset($_GET["kustutaid"]) && isAdmin()) {
                                 </div>
 
                                 <div class="formGroup">
-                                    <select name="role" required>
-                                        <option value="0">Guest</option>
-                                        <option value="1">Worker</option>
-                                        <option value="2">Admin</option>
-                                    </select>
+                                    <div class="customSelectWrapper">
+                                        <select name="role" class="customSelectNative" required>
+                                            <option value="0">Guest</option>
+                                            <option value="1">Worker</option>
+                                            <option value="2">Admin</option>
+                                        </select>
+
+                                        <button type="button" class="customSelectTrigger">
+                                            <span class="customSelectText">Guest</span>
+                                            <span class="customSelectArrow">⌄</span>
+                                        </button>
+
+                                        <div class="customSelectDropdown">
+                                            <div class="customSelectOption selected" data-value="0">Guest</div>
+                                            <div class="customSelectOption" data-value="1">Worker</div>
+                                            <div class="customSelectOption" data-value="2">Admin</div>
+                                        </div>
+                                    </div>
                                 </div>
 
                             </div>
@@ -240,11 +253,26 @@ if (isset($_GET["kustutaid"]) && isAdmin()) {
                                                     </div>
 
                                                     <div class="formGroup">
-                                                        <select name="role" required>
-                                                            <option value="0" <?= ($user->Roll == 0 ? 'selected' : '') ?>>Guest</option>
-                                                            <option value="1" <?= ($user->Roll == 1 ? 'selected' : '') ?>>Worker</option>
-                                                            <option value="2" <?= ($user->Roll == 2 ? 'selected' : '') ?>>Admin</option>
-                                                        </select>
+                                                        <div class="customSelectWrapper">
+                                                            <select name="role" class="customSelectNative" required>
+                                                                <option value="0" <?= ($user->Roll == 0 ? 'selected' : '') ?>>Guest</option>
+                                                                <option value="1" <?= ($user->Roll == 1 ? 'selected' : '') ?>>Worker</option>
+                                                                <option value="2" <?= ($user->Roll == 2 ? 'selected' : '') ?>>Admin</option>
+                                                            </select>
+
+                                                            <button type="button" class="customSelectTrigger">
+                                                                <span class="customSelectText">
+                                                                    <?= ($user->Roll == 0 ? 'Guest' : ($user->Roll == 1 ? 'Worker' : 'Admin')) ?>
+                                                                </span>
+                                                                <span class="customSelectArrow">⌄</span>
+                                                            </button>
+
+                                                            <div class="customSelectDropdown">
+                                                                <div class="customSelectOption <?= ($user->Roll == 0 ? 'selected' : '') ?>" data-value="0">Guest</div>
+                                                                <div class="customSelectOption <?= ($user->Roll == 1 ? 'selected' : '') ?>" data-value="1">Worker</div>
+                                                                <div class="customSelectOption <?= ($user->Roll == 2 ? 'selected' : '') ?>" data-value="2">Admin</div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
 

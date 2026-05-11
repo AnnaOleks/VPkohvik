@@ -13,20 +13,18 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] < 1) {
 $kuu = $_GET["kuu"] ?? date("Y-m");
 $tootaja = $_GET["tootaja"] ?? "";
 
-if (!isAdmin()) {
-    $tootaja = $_SESSION["username"];
-}
-
 $tootajad = kysiTootajad();
 
-if (isset($_GET["kustutaid"]) && isAdmin()) {
+$graafikNimekiri = kysiGraafikKuu($kuu, $tootaja);
+
+if (isset($_GET["kustutaid"]) && isWorker()) {
     kustutaGraafik((int)$_GET["kustutaid"]);
 
     header("Location: index.php?leht=adminGraafik.php&kuu=" . urlencode($kuu) . "&tootaja=" . urlencode($tootaja));
     exit();
 }
 
-if (isset($_POST["lisa"]) && isAdmin()) {
+if (isset($_POST["lisa"]) && isWorker()) {
     $userName = htmlspecialchars(trim($_POST["UserName"] ?? ""));
     $date = trim($_POST["Date"] ?? "");
     $startTime = trim($_POST["StartTime"] ?? "");
@@ -50,16 +48,12 @@ if (isset($_POST["muutmine"])) {
 
     $saabMuuta = false;
 
-    if ($vanaVahetus) {
-        if (isAdmin()) {
-            $saabMuuta = true;
-        } elseif ($vanaVahetus["UserName"] === ($_SESSION["username"] ?? "")) {
-            $saabMuuta = true;
-        }
+    if ($vanaVahetus && isWorker()) {
+        $saabMuuta = true;
     }
 
     if ($saabMuuta) {
-        $userName = isAdmin()
+        $userName = isWorker()
                 ? htmlspecialchars(trim($_POST["UserName"] ?? ""))
                 : $_SESSION["username"];
 
@@ -79,8 +73,6 @@ if (isset($_POST["muutmine"])) {
     header("Location: index.php?leht=adminGraafik.php&kuu=" . urlencode($kuu) . "&tootaja=" . urlencode($tootaja));
     exit();
 }
-
-$graafikNimekiri = kysiGraafikKuu($kuu, $tootaja);
 
 $graafikPaevadeKaupa = [];
 
@@ -150,21 +142,31 @@ $lisaKuupaev = $_GET["kuupaev"] ?? date("Y-m-d");
             <div class="adminPanelCard">
 
                 <form method="get" action="index.php" class="adminTtoolbar">
+
                     <input type="hidden" name="leht" value="adminGraafik.php">
 
-                    <div class="adminOtsingBox">
+                    <!-- MONTH -->
+                    <div class="adminOtsingBox graafikMonthBox">
                         <input
-                                type="month"
+                                type="text"
                                 name="kuu"
-                                class="adminPiibuOtsing"
+                                class="adminPiibuOtsing graafikKuu"
+                                placeholder="Vali kuu"
                                 value="<?= htmlspecialchars($kuu) ?>"
                         >
                     </div>
 
-                    <?php if (isWorker()): ?>
-                        <div class="adminOtsingBox">
-                            <select name="tootaja" class="adminPiibuOtsing">
-                                <option value="">Kõik töötajad</option>
+                    <!-- WORKER -->
+                    <div class="adminOtsingBox graafikWorkerBox">
+
+                        <div class="customSelectWrapper">
+
+                            <select name="tootaja" class="customSelectNative">
+
+                                <option value=""
+                                        <?= $tootaja == "" ? "selected" : "" ?>>
+                                    Kõik töötajad
+                                </option>
 
                                 <?php foreach ($tootajad as $t): ?>
                                     <option value="<?= htmlspecialchars($t["UserName"]) ?>"
@@ -172,43 +174,60 @@ $lisaKuupaev = $_GET["kuupaev"] ?? date("Y-m-d");
                                         <?= htmlspecialchars($t["UserName"]) ?>
                                     </option>
                                 <?php endforeach; ?>
+
                             </select>
-                            <div class="customSelectWrapper">
-                                <select name="hookahBrandId" class="customSelectNative" required>
-                                    <option value="">Vali kategooria</option>
-                                    <?php foreach ($categories as $cat): ?>
-                                        <option value="<?= htmlspecialchars($cat['Id']) ?>">
-                                            <?= htmlspecialchars($cat['Name']) ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
 
-                                <div class="customSelectTrigger">
-                                    <span class="customSelectText">Vali kategooria</span>
-                                    <span class="customSelectArrow">▾</span>
-                                </div>
+                            <div class="customSelectTrigger">
+                                <span class="customSelectText">
+                                    <?= $tootaja !== ""
+                                            ? htmlspecialchars($tootaja)
+                                            : "Kõik töötajad" ?>
+                                </span>
 
-                                <div class="customSelectDropdown">
-                                    <?php foreach ($categories as $cat): ?>
-                                        <div
-                                                class="customSelectOption"
-                                                data-value="<?= htmlspecialchars($cat['Id']) ?>"
-                                        >
-                                            <?= htmlspecialchars($cat['Name']) ?>
-                                        </div>
-                                    <?php endforeach; ?>
-                                </div>
+                                <span class="customSelectArrow">▾</span>
                             </div>
+
+                            <div class="customSelectDropdown">
+
+                                <div class="customSelectOption <?= $tootaja == "" ? "selected" : "" ?>"
+                                     data-value="">
+                                    Kõik töötajad
+                                </div>
+
+                                <?php foreach ($tootajad as $t): ?>
+
+                                    <div class="customSelectOption <?= $tootaja == $t["UserName"] ? "selected" : "" ?>"
+                                         data-value="<?= htmlspecialchars($t["UserName"]) ?>">
+
+                                        <?= htmlspecialchars($t["UserName"]) ?>
+
+                                    </div>
+
+                                <?php endforeach; ?>
+
+                            </div>
+
                         </div>
-                    <?php endif; ?>
 
-                    <button type="submit" class="btn">Näita</button>
+                    </div>
 
+                    <!-- BUTTON -->
+                    <button type="submit" class="btn">
+                        Näita
+                    </button>
+
+                    <!-- ADD -->
                     <?php if (isWorker()): ?>
-                        <a href="index.php?leht=adminGraafik.php&lisa=1&kuu=<?= urlencode($kuu) ?>&tootaja=<?= urlencode($tootaja) ?>" class="btn">
+
+                        <a href="index.php?leht=adminGraafik.php&lisa=1&kuu=<?= urlencode($kuu) ?>&tootaja=<?= urlencode($tootaja) ?>"
+                           class="btn">
+
                             + Lisa vahetus
+
                         </a>
+
                     <?php endif; ?>
+
                 </form>
 
                 <?php if (isset($_GET["lisa"]) && isWorker()): ?>
@@ -216,49 +235,62 @@ $lisaKuupaev = $_GET["kuupaev"] ?? date("Y-m-d");
                         <h2 class="formTitle dashboardItemTitle">Uue vahetuse lisamine</h2>
 
                         <form method="post" action="index.php?leht=adminGraafik.php&kuu=<?= urlencode($kuu) ?>&tootaja=<?= urlencode($tootaja) ?>">
-                            <div class="formGrid">
+                            <div class="graafikFormGrid">
 
-                                <div class="formGroup">
-                                    <select name="UserName" required>
-                                        <option value="">Vali töötaja</option>
+                                <div class="formGroup graafikWorkerInput">
+                                    <div class="customSelectWrapper">
+                                        <select name="UserName" class="customSelectNative" required>
+                                            <option value="">Vali töötaja</option>
 
-                                        <?php foreach ($tootajad as $t): ?>
-                                            <option value="<?= htmlspecialchars($t["UserName"]) ?>">
-                                                <?= htmlspecialchars($t["UserName"]) ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
+                                            <?php foreach ($tootajad as $t): ?>
+                                                <option value="<?= htmlspecialchars($t["UserName"]) ?>"
+                                                        <?= $tootaja == $t["UserName"] ? "selected" : "" ?>>
+                                                    <?= htmlspecialchars($t["UserName"]) ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+
+                                        <div class="customSelectTrigger">
+                                            <span class="customSelectText">
+                                                <?= $tootaja !== "" ? htmlspecialchars($tootaja) : "Vali töötaja" ?>
+                                            </span>
+                                            <span class="customSelectArrow">▾</span>
+                                        </div>
+
+                                        <div class="customSelectDropdown">
+                                            <?php foreach ($tootajad as $t): ?>
+                                                <div class="customSelectOption <?= $tootaja == $t["UserName"] ? "selected" : "" ?>"
+                                                     data-value="<?= htmlspecialchars($t["UserName"]) ?>">
+                                                    <?= htmlspecialchars($t["UserName"]) ?>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="formGroup">
-                                    <input
-                                            type="text"
-                                            name="Date"
-                                            class="bronKuupaev"
-                                            placeholder="Vali kuupäev"
-                                            value="<?= htmlspecialchars(date("d.m.Y", strtotime($lisaKuupaev))) ?>"
-                                            required
-                                    >
+                                    <input type="text"
+                                           name="Date"
+                                           class="bronKuupaev"
+                                           placeholder="Vali kuupäev"
+                                           value="<?= htmlspecialchars(date("d.m.Y", strtotime($lisaKuupaev))) ?>"
+                                           required>
                                 </div>
 
                                 <div class="formGroup">
-                                    <input
-                                            type="text"
-                                            name="StartTime"
-                                            class="bronKellaaeg"
-                                            placeholder="Algus"
-                                            required
-                                    >
+                                    <input type="text"
+                                           name="StartTime"
+                                           class="bronKellaaeg"
+                                           placeholder="Algus"
+                                           required>
                                 </div>
 
                                 <div class="formGroup">
-                                    <input
-                                            type="text"
-                                            name="EndTime"
-                                            class="bronKellaaeg"
-                                            placeholder="Lõpp"
-                                            required
-                                    >
+                                    <input type="text"
+                                           name="EndTime"
+                                           class="bronKellaaeg"
+                                           placeholder="Lõpp"
+                                           required>
                                 </div>
 
                             </div>
@@ -266,7 +298,8 @@ $lisaKuupaev = $_GET["kuupaev"] ?? date("Y-m-d");
                             <div class="formActions">
                                 <button type="submit" name="lisa" class="btn">Salvesta</button>
 
-                                <a href="index.php?leht=adminGraafik.php&kuu=<?= urlencode($kuu) ?>&tootaja=<?= urlencode($tootaja) ?>" class="btn katkestaBtn">
+                                <a href="index.php?leht=adminGraafik.php&kuu=<?= urlencode($kuu) ?>&tootaja=<?= urlencode($tootaja) ?>"
+                                   class="btn katkestaBtn">
                                     Katkesta
                                 </a>
                             </div>
@@ -276,7 +309,7 @@ $lisaKuupaev = $_GET["kuupaev"] ?? date("Y-m-d");
 
                 <?php if ($muudetavVahetus): ?>
                     <?php
-                    $saabMuutaSeda = isAdmin() || $muudetavVahetus["UserName"] === ($_SESSION["username"] ?? "");
+                    $saabMuutaSeda = isWorker() || $muudetavVahetus["UserName"] === ($_SESSION["username"] ?? "");
                     ?>
 
                     <?php if ($saabMuutaSeda): ?>
@@ -288,16 +321,36 @@ $lisaKuupaev = $_GET["kuupaev"] ?? date("Y-m-d");
 
                                 <div class="formGrid">
 
-                                    <?php if (isAdmin()): ?>
-                                        <div class="formGroup">
-                                            <select name="UserName" required>
-                                                <?php foreach ($tootajad as $t): ?>
-                                                    <option value="<?= htmlspecialchars($t["UserName"]) ?>"
-                                                            <?= $muudetavVahetus["UserName"] == $t["UserName"] ? "selected" : "" ?>>
-                                                        <?= htmlspecialchars($t["UserName"]) ?>
-                                                    </option>
-                                                <?php endforeach; ?>
-                                            </select>
+                                    <?php if (isWorker()): ?>
+                                        <div class="formGroup graafikWorkerInput">
+                                            <div class="customSelectWrapper">
+                                                <select name="UserName" class="customSelectNative" required>
+                                                    <option value="">Vali töötaja</option>
+
+                                                    <?php foreach ($tootajad as $t): ?>
+                                                        <option value="<?= htmlspecialchars($t["UserName"]) ?>"
+                                                                <?= $tootaja == $t["UserName"] ? "selected" : "" ?>>
+                                                            <?= htmlspecialchars($t["UserName"]) ?>
+                                                        </option>
+                                                    <?php endforeach; ?>
+                                                </select>
+
+                                                <div class="customSelectTrigger">
+                                            <span class="customSelectText">
+                                                <?= $tootaja !== "" ? htmlspecialchars($tootaja) : "Vali töötaja" ?>
+                                            </span>
+                                                    <span class="customSelectArrow">▾</span>
+                                                </div>
+
+                                                <div class="customSelectDropdown">
+                                                    <?php foreach ($tootajad as $t): ?>
+                                                        <div class="customSelectOption <?= $tootaja == $t["UserName"] ? "selected" : "" ?>"
+                                                             data-value="<?= htmlspecialchars($t["UserName"]) ?>">
+                                                            <?= htmlspecialchars($t["UserName"]) ?>
+                                                        </div>
+                                                    <?php endforeach; ?>
+                                                </div>
+                                            </div>
                                         </div>
                                     <?php endif; ?>
 
@@ -391,7 +444,7 @@ $lisaKuupaev = $_GET["kuupaev"] ?? date("Y-m-d");
                                             echo "<a class='shiftEdit' href='index.php?leht=adminGraafik.php&muutmisid=" . urlencode($vahetus["Id"]) . "&kuu=" . urlencode($kuu) . "&tootaja=" . urlencode($tootaja) . "'>Muuda</a>";
                                         }
 
-                                        if (isAdmin()) {
+                                        if (isWorker()) {
                                             echo "<a class='shiftDelete' onclick=\"return confirm('Kas kustutada see vahetus?')\" href='index.php?leht=adminGraafik.php&kustutaid=" . urlencode($vahetus["Id"]) . "&kuu=" . urlencode($kuu) . "&tootaja=" . urlencode($tootaja) . "'>Kustuta</a>";
                                         }
 
@@ -399,7 +452,7 @@ $lisaKuupaev = $_GET["kuupaev"] ?? date("Y-m-d");
                                     }
                                 }
 
-                                if (isAdmin()) {
+                                if (isWorker()) {
                                     $kuupaevLisa = $kuu . "-" . str_pad($paev, 2, "0", STR_PAD_LEFT);
 
                                     echo "<a class='addShiftSmall' href='index.php?leht=adminGraafik.php&lisa=1&kuupaev=" . urlencode($kuupaevLisa) . "&kuu=" . urlencode($kuu) . "&tootaja=" . urlencode($tootaja) . "'>+ Lisa</a>";
@@ -428,18 +481,35 @@ $lisaKuupaev = $_GET["kuupaev"] ?? date("Y-m-d");
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+        if (document.querySelector(".graafikKuu")) {
+            flatpickr(".graafikKuu", {
+                locale: "et",
+                dateFormat: "Y-m",
+                altInput: true,
+                altFormat: "F Y",
+                defaultDate: "<?= htmlspecialchars($kuu) ?>",
+                plugins: [
+                    new monthSelectPlugin({
+                        shorthand: false,
+                        dateFormat: "Y-m",
+                        altFormat: "F Y"
+                    })
+                ]
+            });
+        }
+
         flatpickr(".bronKuupaev", {
-            dateFormat: "d.m.Y",
-            locale: "et"
+            locale: "et",
+            dateFormat: "d.m.Y"
         });
 
         flatpickr(".bronKellaaeg", {
+            locale: "et",
             enableTime: true,
             noCalendar: true,
             dateFormat: "H:i",
             time_24hr: true,
-            minuteIncrement: 30,
-            locale: "et"
+            minuteIncrement: 30
         });
     });
 </script>

@@ -32,6 +32,13 @@
     box-sizing: border-box;
 }
 
+.lisaInfoVorm {
+    position: relative;
+    z-index: 999;
+    overflow: visible;
+}
+
+
 /* Планшет */
 @media (max-width: 900px) {
     #addForm .formGrid {

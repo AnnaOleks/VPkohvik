@@ -179,6 +179,14 @@ if (isset($_GET["kustutaid"]) && isAdmin()) {
                                 </div>
 
                                 <div class="formGroup">
+                                    <input
+                                            type="text"
+                                            name="description"
+                                            placeholder="Kirjeldus"
+                                    >
+                                </div>
+
+                                <div class="formGroup">
                                     <div class="customSelectWrapper">
                                         <select name="hookahBrandId" class="customSelectNative" required>
                                             <option value="">Vali kategooria</option>
@@ -205,14 +213,6 @@ if (isset($_GET["kustutaid"]) && isAdmin()) {
                                             <?php endforeach; ?>
                                         </div>
                                     </div>
-                                </div>
-
-                                <div class="formGroup">
-                                    <input
-                                            type="text"
-                                            name="description"
-                                            placeholder="Kirjeldus"
-                                    >
                                 </div>
 
                                 <div class="formGroup">

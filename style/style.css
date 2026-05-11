@@ -637,3 +637,58 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     border-color: var(--gold-1);
     box-shadow: 0 0 0 2px rgba(201,162,77,.1);
 }
+
+/* ===== MONTH PICKER как календарь на главной ===== */
+
+.flatpickr-calendar .flatpickr-monthSelect-months {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 14px !important;
+    padding: 15px 15px 15px !important;
+}
+
+.flatpickr-calendar .flatpickr-monthSelect-month {
+    width: 100% !important;
+    height: 35px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    border-radius: var(--r-sm) !important;
+    border: 1px solid transparent !important;
+    background: transparent !important;
+
+    color: var(--text-secondary) !important;
+    font-family: var(--font-text), sans-serif !important;
+    font-size: 13px !important;
+    line-height: 1 !important;
+    text-align: center !important;
+
+    cursor: pointer !important;
+    transition: 0.2s ease !important;
+}
+
+.flatpickr-calendar .flatpickr-monthSelect-month:hover {
+    background: rgba(201,162,77,.12) !important;
+    border-color: rgba(201,162,77,.35) !important;
+    color: var(--gold-1) !important;
+}
+
+.flatpickr-calendar .flatpickr-monthSelect-month.selected {
+    background: linear-gradient(
+            135deg,
+            var(--gold-2) 0%,
+            var(--gold-1) 40%,
+            var(--gold-3) 100%
+    ) !important;
+    border-color: var(--gold-1) !important;
+    color: #000 !important;
+    box-shadow: 0 4px 12px rgba(201,162,77,.25) !important;
+}
+
+.flatpickr-calendar .flatpickr-monthSelect-month.today {
+    border-color: var(--gold-1);
+}

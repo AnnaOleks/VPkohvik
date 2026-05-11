@@ -383,10 +383,6 @@
     z-index: 100;
 }
 
-.adminEditForm .customSelectTrigger {
-    min-height: 54px;
-}
-
 .adminEditForm .customSelectText {
     display: block;
     min-width: 0;

@@ -491,6 +491,45 @@ function kysiJoogiKategooriad() {
     return $categories;
 }
 
+function kysiSnakidMenuu() {
+    global $yhendus;
+
+    $kask = $yhendus->prepare("
+        SELECT 
+            Id,
+            Name,
+            Description,
+            Price,
+            Category
+        FROM MenuItems
+        WHERE IsAvailable = 1
+        AND Category = 'Snäkid'
+        ORDER BY Name ASC
+    ");
+
+    $kask->execute();
+    $tulemus = $kask->get_result();
+
+    $snakid = [
+        [
+            "name" => "Snäkid",
+            "description" => "Maitsvad suupisted jagamiseks või kõrvale nautimiseks.",
+            "items" => []
+        ]
+    ];
+
+    while ($rida = $tulemus->fetch_assoc()) {
+        $snakid[0]["items"][] = [
+            "id" => $rida["Id"],
+            "name" => $rida["Name"],
+            "description" => $rida["Description"],
+            "price" => $rida["Price"]
+        ];
+    }
+
+    return $snakid;
+}
+
 function kysiSnakid($sorttulp = "Nimetus", $otsisona = '', $category = ''){
     global $yhendus;
 

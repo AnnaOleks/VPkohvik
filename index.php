@@ -11,6 +11,7 @@ require_once('functions.php');
     <meta charset="UTF-8">
     <title>VP Kohvik</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/style.css">
     <link rel="stylesheet" href="style/style.css">
     <link rel="stylesheet" href="style/styleNav.css">
     <link rel="stylesheet" href="style/styleHeader.css">
@@ -48,6 +49,7 @@ include("footer.php");
 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://npmcdn.com/flatpickr/dist/l10n/et.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
 <script>
     flatpickr("#kuupaev", {
         dateFormat: "d.m.Y",
